@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "qdrant-skills@claude-plugins-official": true,
+    "deepeval@claude-plugins-official": true
+  }
+}

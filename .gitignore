@@ -1,0 +1,9 @@
+# Root-anchored so src/enterprise_rag/data/ (the package) is not ignored.
+/data/
+
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.env
