@@ -1,6 +1,6 @@
 # Golden set and evaluation harness: design
 
-Status: draft for approval · 2026-10-23
+Status: open question answered (Groq), ready for the implementation plan · 2026-10-23
 
 ## Why
 
@@ -34,7 +34,7 @@ The golden set and harness must prove four things:
 
 - Corpus is fixed by `configs/data_sources.yaml`: 275 documents, 7 roles, `c_level` sees all, `general` pages are visible to all roles.
 - Only public data plus fictional spreadsheets, so the golden set can be committed and public (the repo is public).
-- No LLM API key is configured yet. Drafting and the LLM judge need one (see open questions).
+- LLMs come from Groq only (see "LLM provider").
 - Code follows the repo layout: `src/enterprise_rag/evaluation/` with a `guide/` file per core module, config in YAML, seeded.
 
 ## Decisions
@@ -149,5 +149,14 @@ src/enterprise_rag/evaluation/
 ## Left to the builder
 Exact prompt wording, the word-overlap threshold, BM25 library choice, run-file JSON layout, and test structure.
 
-## Open questions for the user
-1. **Which LLM and API key** to use for drafting and judging. Proposed: Claude, with `claude-sonnet-5-5` to draft and generate answers and `claude-opus-5-5` as judge, so the judge differs from the generator. My rough estimate is a few dollars to draft about 100 items. That's not measured yet; the harness will log the actual cost.
+### LLM provider
+The user has a **Groq** key only (free tier: 1,000 requests and 8,000 tokens per minute, as measured from the rate-limit headers on 2026-10-23). The key is read from `GROQ_API_KEY` in the git-ignored `.env`. Model names live in config, not code.
+
+| Use | Model | Why |
+|---|---|---|
+| Drafting golden items | `openai/gpt-oss-120b` | the strongest model on the key; drafts are reviewed anyway |
+| LLM judge (faithfulness, relevancy, citations) | `openai/gpt-oss-120b` | strongest available judge |
+| Answer generation (pipeline default, next step) | `qwen/qwen3.8-27b` | a different family from the judge, so the judge isn't grading its own model |
+| Injection classifier (guardrail step, later) | `meta-llama/llama-prompt-guard-2-86m` | available on the same key; noted for later |
+
+All LLM calls go through one small client that waits and retries on HTTP 429 and spaces requests to stay under the token limit. Drafting about 84 items should take roughly 15-20 minutes at 8,000 tokens per minute. *(Claude's call on the models, within the user's choice of Groq.)*
