@@ -8,6 +8,14 @@ from enterprise_rag.evaluation.answer_metrics import (
     parse_numbers,
 )
 from enterprise_rag.evaluation.computed import computed_items
+from enterprise_rag.evaluation.drafting import (
+    DraftPlan,
+    Passage,
+    draft_all,
+    draft_item,
+    sample_passages,
+    write_review_file,
+)
 from enterprise_rag.evaluation.evidence import (
     chunk_is_relevant,
     normalize_text,
@@ -59,12 +67,14 @@ from enterprise_rag.evaluation.safety_metrics import (
 __all__ = [
     "CATEGORIES",
     "AccessChecker",
+    "DraftPlan",
     "Evidence",
     "GoldenItem",
     "GoldenValidationError",
     "GroqJudge",
     "ItemResult",
     "NumericAnswer",
+    "Passage",
     "RunResult",
     "UnknownDocumentError",
     "aggregate",
@@ -74,6 +84,8 @@ __all__ = [
     "citation_precision",
     "computed_items",
     "doc_hit_at_k",
+    "draft_all",
+    "draft_item",
     "evidence_recall_at_k",
     "false_refusal",
     "hit_at_k",
@@ -96,8 +108,10 @@ __all__ = [
     "render_ablation_table",
     "retrieval_leak",
     "run_eval",
+    "sample_passages",
     "save_golden",
     "validate_golden",
     "word_count",
+    "write_review_file",
     "write_run",
 ]

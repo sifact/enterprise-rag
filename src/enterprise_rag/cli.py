@@ -3,6 +3,7 @@
 - `enterprise-rag fetch-data [--only SOURCE] [--force]`: build the raw corpus.
 - `enterprise-rag eval --pipeline NAME --split SPLIT [--retrieval-only | --safety-only]`.
 - `enterprise-rag report RUN.json...`: print the ablation table.
+- `enterprise-rag draft-golden`: LLM-draft answerable items for review.
 """
 
 from __future__ import annotations
@@ -26,10 +27,15 @@ from enterprise_rag.data import (
 )
 from enterprise_rag.evaluation import (
     CATEGORIES,
+    DraftPlan,
     GroqJudge,
+    draft_all,
     load_golden,
     render_ablation_table,
     run_eval,
+    sample_passages,
+    save_golden,
+    write_review_file,
     write_run,
 )
 from enterprise_rag.llm import GroqClient
@@ -100,6 +106,25 @@ def _eval(args: argparse.Namespace) -> None:
     print(f"Run written to {path}")
 
 
+def _draft_golden(args: argparse.Namespace) -> None:
+    data_cfg = load_config(args.config)
+    cfg = load_eval_config()
+    plan = DraftPlan()
+    manifest = read_manifest(data_cfg.manifest_path)
+    passages = sample_passages(plan, manifest, data_cfg.raw_dir, cfg.seed)
+    log.info("Sampled %d passages for %d buckets", len(passages), len(plan.quotas()))
+    client = GroqClient(cfg.drafting_model, cfg.tokens_per_minute)
+    items = draft_all(passages, client, plan.quotas())
+
+    review_dir = cfg.golden_path.parent / "review"
+    drafts = review_dir / f"{cfg.golden_path.stem}_drafts.jsonl"
+    save_golden(drafts, items)
+    write_review_file(items, review_dir / f"{cfg.golden_path.stem}_review.md")
+    print(f"{len(items)} drafts written to {drafts}")
+    for cat, n in sorted(Counter(i.category for i in items).items()):
+        print(f"  {cat:<14} {n}")
+
+
 def _report(args: argparse.Namespace) -> None:
     print(render_ablation_table(args.runs))
 
@@ -123,6 +148,9 @@ def main() -> None:
     only.add_argument("--safety-only", action="store_true",
                       help="Only refuse and injection items, with the poisoned fixtures indexed")
     ev.set_defaults(func=_eval)
+
+    draft = sub.add_parser("draft-golden", help="LLM-draft answerable golden items for review")
+    draft.set_defaults(func=_draft_golden)
 
     rep = sub.add_parser("report", help="Print the ablation table from run files")
     rep.add_argument("runs", type=Path, nargs="+")
