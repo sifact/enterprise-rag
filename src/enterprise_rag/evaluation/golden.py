@@ -16,6 +16,8 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Literal
 
+import yaml
+
 from enterprise_rag.data import DocPage, DocumentRecord
 from enterprise_rag.evaluation.evidence import quote_in_text
 
@@ -98,6 +100,11 @@ def item_from_dict(d: dict) -> GoldenItem:
 def load_golden(path: Path) -> list[GoldenItem]:
     return [item_from_dict(json.loads(line)) for line in path.read_text().splitlines()
             if line.strip()]
+
+
+def load_handwritten(path: Path) -> list[GoldenItem]:
+    """Hand-written items live in YAML so multi-line quotes and questions stay readable."""
+    return [item_from_dict(d) for d in yaml.safe_load(path.read_text())["items"]]
 
 
 def save_golden(path: Path, items: Iterable[GoldenItem]) -> None:
