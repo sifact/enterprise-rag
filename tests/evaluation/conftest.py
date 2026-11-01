@@ -2,8 +2,8 @@ from dataclasses import replace
 
 import pytest
 
-from enterprise_rag.data import DocumentRecord
-from enterprise_rag.evaluation import DocPage, Evidence, GoldenItem
+from enterprise_rag.data import DocPage, DocumentRecord
+from enterprise_rag.evaluation import Evidence, GoldenItem
 
 ROLES = ("engineering", "hr", "marketing", "legal", "sales", "finance", "c_level")
 

@@ -1,7 +1,11 @@
 import pandas as pd
 
-from enterprise_rag.data import DocumentRecord
-from enterprise_rag.evaluation import load_doc_pages, load_fixture_pages
+from enterprise_rag.data import (
+    DocumentRecord,
+    load_doc_pages,
+    load_fixture_pages,
+    load_fixture_roles,
+)
 
 
 def rec(path: str) -> DocumentRecord:
@@ -33,7 +37,5 @@ def test_load_fixture_pages_ids_and_body(tmp_path):
 
 
 def test_load_fixture_roles_from_front_matter(tmp_path):
-    from enterprise_rag.evaluation import load_fixture_roles
-
     (tmp_path / "vendor-faq.md").write_text("---\nallowed_roles: [legal, c_level]\n---\nBody\n")
     assert load_fixture_roles(tmp_path) == {"fixture:vendor-faq": ("legal", "c_level")}

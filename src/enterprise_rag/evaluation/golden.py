@@ -16,8 +16,7 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Literal
 
-from enterprise_rag.data import DocumentRecord
-from enterprise_rag.evaluation.doc_text import DocPage
+from enterprise_rag.data import DocPage, DocumentRecord
 from enterprise_rag.evaluation.evidence import quote_in_text
 
 QUOTE_MIN_WORDS = 10

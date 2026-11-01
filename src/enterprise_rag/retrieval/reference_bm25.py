@@ -12,8 +12,12 @@ from pathlib import Path
 
 from rank_bm25 import BM25Okapi
 
-from enterprise_rag.data import DocumentRecord
-from enterprise_rag.evaluation import load_doc_pages, load_fixture_pages, load_fixture_roles
+from enterprise_rag.data import (
+    DocumentRecord,
+    load_doc_pages,
+    load_fixture_pages,
+    load_fixture_roles,
+)
 from enterprise_rag.retrieval.types import PipelineResponse, RetrievedChunk
 
 _TOKEN = re.compile(r"\w+")

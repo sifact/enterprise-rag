@@ -13,8 +13,8 @@ from pathlib import Path
 import pandas as pd
 from pypdf import PdfReader
 
-from enterprise_rag.data import DocumentRecord
 from enterprise_rag.data.handbook_pages import split_front_matter
+from enterprise_rag.data.manifest import DocumentRecord
 
 FIXTURE_PREFIX = "fixture:"
 

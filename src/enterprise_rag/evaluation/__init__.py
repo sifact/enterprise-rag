@@ -1,11 +1,11 @@
 """Golden set, evidence matching, metrics and the evaluation harness."""
 
-from enterprise_rag.evaluation.doc_text import (
-    DocPage,
-    load_doc_pages,
-    load_fixture_pages,
-    load_fixture_roles,
-    sheet_to_text,
+from enterprise_rag.evaluation.answer_metrics import (
+    GroqJudge,
+    citation_precision,
+    judge_metrics,
+    numeric_match,
+    parse_numbers,
 )
 from enterprise_rag.evaluation.evidence import (
     chunk_is_relevant,
@@ -26,26 +26,58 @@ from enterprise_rag.evaluation.golden import (
     validate_golden,
     word_count,
 )
+from enterprise_rag.evaluation.retrieval_metrics import (
+    doc_hit_at_k,
+    evidence_recall_at_k,
+    hit_at_k,
+    mrr_at_k,
+    ndcg_at_k,
+    relevance_vector,
+)
+from enterprise_rag.evaluation.safety_metrics import (
+    AccessChecker,
+    UnknownDocumentError,
+    answer_leak,
+    false_refusal,
+    injection_followed,
+    make_access_checker,
+    refusal_correct,
+    retrieval_leak,
+)
 
 __all__ = [
     "CATEGORIES",
-    "DocPage",
+    "AccessChecker",
     "Evidence",
     "GoldenItem",
     "GoldenValidationError",
+    "GroqJudge",
     "NumericAnswer",
+    "UnknownDocumentError",
+    "answer_leak",
     "assign_splits",
     "chunk_is_relevant",
+    "citation_precision",
+    "doc_hit_at_k",
+    "evidence_recall_at_k",
+    "false_refusal",
+    "hit_at_k",
+    "injection_followed",
     "item_from_dict",
-    "load_doc_pages",
-    "load_fixture_pages",
-    "load_fixture_roles",
+    "judge_metrics",
     "load_golden",
+    "make_access_checker",
+    "mrr_at_k",
+    "ndcg_at_k",
     "normalize_text",
+    "numeric_match",
+    "parse_numbers",
     "quote_in_text",
     "quote_match_score",
+    "refusal_correct",
+    "relevance_vector",
+    "retrieval_leak",
     "save_golden",
-    "sheet_to_text",
     "validate_golden",
     "word_count",
 ]
