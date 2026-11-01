@@ -4,6 +4,7 @@
 - `enterprise-rag eval --pipeline NAME --split SPLIT [--retrieval-only | --safety-only]`.
 - `enterprise-rag report RUN.json...`: print the ablation table.
 - `enterprise-rag draft-golden`: LLM-draft answerable items for review.
+- `enterprise-rag build-golden [--spot-check]`: merge reviewed items and freeze the set.
 """
 
 from __future__ import annotations
@@ -21,6 +22,8 @@ from enterprise_rag.data import (
     fetch_handbook,
     fetch_sec,
     fetch_synthetic,
+    load_doc_pages,
+    load_fixture_pages,
     load_fixture_roles,
     read_manifest,
     write_manifest,
@@ -29,12 +32,18 @@ from enterprise_rag.evaluation import (
     CATEGORIES,
     DraftPlan,
     GroqJudge,
+    assemble,
+    computed_items,
     draft_all,
     load_golden,
+    load_handwritten,
+    parse_review_decisions,
     render_ablation_table,
+    reviewed_drafts,
     run_eval,
     sample_passages,
     save_golden,
+    spot_check_ids,
     write_review_file,
     write_run,
 )
@@ -125,6 +134,58 @@ def _draft_golden(args: argparse.Namespace) -> None:
         print(f"  {cat:<14} {n}")
 
 
+SPOT_CHECK_HEADING = "# User spot-check"
+
+
+def _build_golden(args: argparse.Namespace) -> None:
+    data_cfg = load_config(args.config)
+    cfg = load_eval_config()
+    golden_dir = cfg.golden_path.parent
+    stem = cfg.golden_path.stem
+    review_path = golden_dir / "review" / f"{stem}_review.md"
+    drafts = reviewed_drafts(load_golden(golden_dir / "review" / f"{stem}_drafts.jsonl"),
+                             parse_review_decisions(review_path))
+    handwritten = load_handwritten(golden_dir / "handwritten.yaml")
+    manifest = read_manifest(data_cfg.manifest_path)
+    doc_texts = {r.doc_id: load_doc_pages(r, data_cfg.raw_dir) for r in manifest}
+    doc_texts |= load_fixture_pages(cfg.fixtures_dir)
+    items = assemble(drafts, computed_items(data_cfg), handwritten, manifest, doc_texts,
+                     data_cfg.roles, data_cfg.superuser_role, cfg.seed)
+    for cat, n in sorted(Counter(i.category for i in items).items()):
+        print(f"  {cat:<22} {n}")
+    print(f"  total {len(items)}; " + ", ".join(
+        f"{s} {n}" for s, n in sorted(Counter(i.split for i in items).items())))
+
+    if args.spot_check:
+        _write_spot_check(review_path, [i for i in items if i.id in
+                                        set(spot_check_ids(items, cfg.seed))])
+        return
+    if cfg.golden_path.exists() and not args.force:
+        raise SystemExit(f"{cfg.golden_path} is frozen; bump the version instead of overwriting")
+    save_golden(cfg.golden_path, items)
+    print(f"Wrote {cfg.golden_path}")
+
+
+def _write_spot_check(review_path: Path, items) -> None:
+    """Replace the spot-check section at the end of the review file."""
+    text = review_path.read_text().split("\n" + SPOT_CHECK_HEADING)[0].rstrip()
+    lines = ["", "", SPOT_CHECK_HEADING, "",
+             (f"{len(items)} items sampled at random (seed from configs/eval.yaml) from every "
+              "source. Note any change under the item; edits are recorded in `notes`."), ""]
+    for i in items:
+        lines += [f"### {i.id} ({i.category}, asked as `{i.asked_as}`, {i.expected_behavior})",
+                  "", f"- Question: {i.question}"]
+        if i.reference_answer:
+            lines.append(f"- Answer: {i.reference_answer}")
+        lines += [f"- Evidence `{e.doc_id}`{f' p{e.page}' if e.page else ''}: "
+                  f"\"{' '.join(e.quote.split())}\"" for e in i.gold_evidence]
+        if i.forbidden_doc_ids:
+            lines.append(f"- Must not see: {', '.join(i.forbidden_doc_ids)}")
+        lines += [f"- Notes: {i.notes}", "", "User comment:", ""]
+    review_path.write_text(text + "\n".join(lines))
+    print(f"Spot-check list ({len(items)} items) added to {review_path}")
+
+
 def _report(args: argparse.Namespace) -> None:
     print(render_ablation_table(args.runs))
 
@@ -151,6 +212,12 @@ def main() -> None:
 
     draft = sub.add_parser("draft-golden", help="LLM-draft answerable golden items for review")
     draft.set_defaults(func=_draft_golden)
+
+    build = sub.add_parser("build-golden", help="Merge reviewed items and freeze the golden set")
+    build.add_argument("--spot-check", action="store_true",
+                       help="Only list the user spot-check sample in the review file")
+    build.add_argument("--force", action="store_true", help="Overwrite a frozen golden file")
+    build.set_defaults(func=_build_golden)
 
     rep = sub.add_parser("report", help="Print the ablation table from run files")
     rep.add_argument("runs", type=Path, nargs="+")
