@@ -7,6 +7,12 @@ from enterprise_rag.evaluation.doc_text import (
     load_fixture_roles,
     sheet_to_text,
 )
+from enterprise_rag.evaluation.evidence import (
+    chunk_is_relevant,
+    normalize_text,
+    quote_in_text,
+    quote_match_score,
+)
 from enterprise_rag.evaluation.golden import (
     CATEGORIES,
     Evidence,
@@ -29,11 +35,15 @@ __all__ = [
     "GoldenValidationError",
     "NumericAnswer",
     "assign_splits",
+    "chunk_is_relevant",
     "item_from_dict",
     "load_doc_pages",
     "load_fixture_pages",
     "load_fixture_roles",
     "load_golden",
+    "normalize_text",
+    "quote_in_text",
+    "quote_match_score",
     "save_golden",
     "sheet_to_text",
     "validate_golden",

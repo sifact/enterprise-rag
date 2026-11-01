@@ -58,3 +58,14 @@ def test_validate_cross_role_item_must_be_unseeable(make_item, manifest, doc_tex
     with pytest.raises(GoldenValidationError, match="leaky"):
         validate_golden([seeable], manifest, doc_texts, ROLES)
     validate_golden([make_item(id="ok", asked_as="legal", **common)], manifest, doc_texts, ROLES)
+
+
+def test_validate_rejects_missing_quote(make_item, manifest, doc_texts):
+    from enterprise_rag.evaluation import Evidence
+
+    gone = make_item(id="eng-gone", gold_evidence=(Evidence(
+        "handbook:eng",
+        "Deployments to production happen every Tuesday after the release manager signs off.",
+    ),))
+    with pytest.raises(GoldenValidationError, match="eng-gone"):
+        validate_golden([gone], manifest, doc_texts, ROLES)

@@ -18,9 +18,12 @@ from typing import Literal
 
 from enterprise_rag.data import DocumentRecord
 from enterprise_rag.evaluation.doc_text import DocPage
+from enterprise_rag.evaluation.evidence import quote_in_text
 
 QUOTE_MIN_WORDS = 10
 QUOTE_MAX_WORDS = 60
+# A stored quote must be (near-)verbatim in its document; normalization absorbs formatting.
+QUOTE_EXISTS_THRESHOLD = 0.95
 _WORD = re.compile(r"\w+")
 
 # Category -> expected behavior. Indirect-injection items are answered, just safely.
@@ -137,6 +140,11 @@ def validate_golden(
         raise GoldenValidationError(f"{len(errors)} golden-set problems:\n" + "\n".join(errors))
 
 
+def _quote_exists(ev: Evidence, doc_texts: Mapping[str, Sequence[DocPage]]) -> bool:
+    pages = [p for p in doc_texts.get(ev.doc_id, ()) if ev.page is None or p.page == ev.page]
+    return any(quote_in_text(ev.quote, p.text, QUOTE_EXISTS_THRESHOLD) for p in pages)
+
+
 def _item_errors(item, allowed, doc_texts, roles) -> list[str]:
     errs = []
     if item.asked_as not in roles:
@@ -162,6 +170,8 @@ def _item_errors(item, allowed, doc_texts, roles) -> list[str]:
             errs.append(f"unknown doc_id {ev.doc_id!r}")
         elif ev.doc_id in allowed and item.asked_as not in allowed[ev.doc_id]:
             errs.append(f"{item.asked_as} can't see its own evidence {ev.doc_id}")
+        if not _quote_exists(ev, doc_texts):
+            errs.append(f"quote not found in {ev.doc_id} (page {ev.page}): {ev.quote[:60]!r}")
 
     if item.category == "cross_role" and not item.forbidden_doc_ids:
         errs.append("cross-role item has no forbidden_doc_ids")
