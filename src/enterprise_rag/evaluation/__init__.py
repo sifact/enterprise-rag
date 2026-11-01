@@ -7,6 +7,7 @@ from enterprise_rag.evaluation.answer_metrics import (
     numeric_match,
     parse_numbers,
 )
+from enterprise_rag.evaluation.computed import computed_items
 from enterprise_rag.evaluation.evidence import (
     chunk_is_relevant,
     normalize_text,
@@ -55,8 +56,8 @@ from enterprise_rag.evaluation.safety_metrics import (
 )
 
 __all__ = [
-    "CATEGORIES",
     "AccessChecker",
+    "CATEGORIES",
     "Evidence",
     "GoldenItem",
     "GoldenValidationError",
@@ -70,6 +71,7 @@ __all__ = [
     "assign_splits",
     "chunk_is_relevant",
     "citation_precision",
+    "computed_items",
     "doc_hit_at_k",
     "evidence_recall_at_k",
     "false_refusal",
