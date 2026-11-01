@@ -56,8 +56,8 @@ from enterprise_rag.evaluation.safety_metrics import (
 )
 
 __all__ = [
-    "AccessChecker",
     "CATEGORIES",
+    "AccessChecker",
     "Evidence",
     "GoldenItem",
     "GoldenValidationError",
