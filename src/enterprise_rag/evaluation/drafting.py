@@ -34,7 +34,7 @@ from enterprise_rag.llm import LLMError
 
 log = logging.getLogger(__name__)
 
-PROMPT_VERSION = "draft-v1"
+PROMPT_VERSION = "draft-v2"
 QUOTE_FOUND_THRESHOLD = 0.95
 MAX_QUESTION_QUOTE_OVERLAP = 0.5  # share of the question's word 4-grams found in a quote
 MIN_SECTION_WORDS = 80
@@ -60,7 +60,8 @@ Rules:
   hold the answer row, starting a few lines above it if needed to reach 15 words.
 - If several passages are given, write ONE question whose answer combines facts from every
   passage (e.g. compares them, or uses one to apply the other). Never join two unrelated
-  questions with "and".
+  questions with "and". If the passages share no natural connection, reply with
+  {{"question": null, "answer": null, "quotes": [], "number": null}}.
 - "answer" is one or two full sentences with units, e.g. "$9.8 million (9,774 in thousands)".
 - For numbers from financial statements, also return "number" with "value" as written in the
   quote (no commas), "unit" (e.g. "USD", "%", "customers") and "scale" (1, 1000 for
@@ -283,11 +284,15 @@ def draft_item(passage: Passage, client, seen_questions: set[str] | frozenset = 
     return item
 
 
-def draft_all(passages: Sequence[Passage], client, quotas: Mapping[str, int]) -> list[GoldenItem]:
-    """Draft passages in order until each bucket's quota is met; failures only skip a passage."""
+def draft_all(passages: Sequence[Passage], client, quotas: Mapping[str, int],
+              seen_questions: set[str] | frozenset = frozenset()) -> list[GoldenItem]:
+    """Draft passages in order until each bucket's quota is met; failures only skip a passage.
+
+    `seen_questions` carries questions from an earlier run, so a top-up run can't repeat them.
+    """
     accepted: list[GoldenItem] = []
     filled: dict[str, int] = defaultdict(int)
-    seen: set[str] = set()
+    seen: set[str] = set(seen_questions)
     for p in passages:
         if filled[p.bucket] >= quotas.get(p.bucket, 0):
             continue
@@ -307,11 +312,15 @@ def draft_all(passages: Sequence[Passage], client, quotas: Mapping[str, int]) ->
 # --- Review file --------------------------------------------------------------------------
 
 
-def write_review_file(items: Sequence[GoldenItem], path: Path) -> None:
-    """One section per draft with accept / edit / drop boxes for the reviewer to tick."""
-    lines = ["# Golden set v1: draft review", "",
+def write_review_file(items: Sequence[GoldenItem], path: Path, append: bool = False) -> None:
+    """One section per draft with accept / edit / drop boxes for the reviewer to tick.
+
+    `append` adds sections for top-up drafts below the existing, already-ticked ones.
+    """
+    header = ["# Golden set v1: draft review", "",
              ("Tick exactly one box per item. For `edit`, change the item in `v1_drafts.jsonl` "
               "and say what changed on the `Review note:` line."), ""]
+    lines: list[str] = []
     for item in items:
         lines += [f"## {item.id}", "",
                   f"- Category: {item.category} · asked as `{item.asked_as}`",
@@ -325,4 +334,7 @@ def write_review_file(items: Sequence[GoldenItem], path: Path) -> None:
             lines.append(f"- Evidence `{ev.doc_id}`{page}: \"{' '.join(ev.quote.split())}\"")
         lines += ["", "- [ ] accept", "- [ ] edit", "- [ ] drop", "", "Review note:", ""]
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(lines))
+    if append and path.exists():
+        path.write_text(path.read_text().rstrip() + "\n\n" + "\n".join(lines))
+    else:
+        path.write_text("\n".join(header + lines))

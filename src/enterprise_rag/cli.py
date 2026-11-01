@@ -14,6 +14,7 @@ import json
 import logging
 import re
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
 
 from enterprise_rag.config import DEFAULT_CONFIG_PATH, load_config, load_eval_config
@@ -118,19 +119,31 @@ def _eval(args: argparse.Namespace) -> None:
 def _draft_golden(args: argparse.Namespace) -> None:
     data_cfg = load_config(args.config)
     cfg = load_eval_config()
-    plan = DraftPlan()
-    manifest = read_manifest(data_cfg.manifest_path)
-    passages = sample_passages(plan, manifest, data_cfg.raw_dir, cfg.seed)
-    log.info("Sampled %d passages for %d buckets", len(passages), len(plan.quotas()))
-    client = GroqClient(cfg.drafting_model, cfg.tokens_per_minute)
-    items = draft_all(passages, client, plan.quotas())
-
     review_dir = cfg.golden_path.parent / "review"
-    drafts = review_dir / f"{cfg.golden_path.stem}_drafts.jsonl"
-    save_golden(drafts, items)
-    write_review_file(items, review_dir / f"{cfg.golden_path.stem}_review.md")
-    print(f"{len(items)} drafts written to {drafts}")
-    for cat, n in sorted(Counter(i.category for i in items).items()):
+    drafts_path = review_dir / f"{cfg.golden_path.stem}_drafts.jsonl"
+    seed = cfg.seed if args.seed is None else args.seed
+
+    existing = load_golden(drafts_path) if args.top_up else []
+    plan = DraftPlan(oversample=args.oversample)
+    quotas = plan.quotas()
+    if args.top_up:
+        # e.g. multi_hop=5: draft only these buckets, appended to the reviewed drafts.
+        quotas = {b: int(n) for b, n in (pair.split("=") for pair in args.top_up)}
+    manifest = read_manifest(data_cfg.manifest_path)
+    passages = [p for p in sample_passages(plan, manifest, data_cfg.raw_dir, seed)
+                if p.bucket in quotas]
+    log.info("Sampled %d passages for %d buckets (seed %d)", len(passages), len(quotas), seed)
+    client = GroqClient(cfg.drafting_model, cfg.tokens_per_minute)
+    new = draft_all(passages, client, quotas, {i.question for i in existing})
+
+    taken = {i.id for i in existing}
+    new = [i if i.id not in taken else replace(i, id=f"{i.id}-s{seed}") for i in new]
+    items = existing + new
+    save_golden(drafts_path, items)
+    write_review_file(new, review_dir / f"{cfg.golden_path.stem}_review.md",
+                      append=bool(args.top_up))
+    print(f"{len(new)} new drafts; {len(items)} in {drafts_path}")
+    for cat, n in sorted(Counter(i.category for i in new).items()):
         print(f"  {cat:<14} {n}")
 
 
@@ -211,6 +224,11 @@ def main() -> None:
     ev.set_defaults(func=_eval)
 
     draft = sub.add_parser("draft-golden", help="LLM-draft answerable golden items for review")
+    draft.add_argument("--top-up", nargs="+", metavar="BUCKET=N",
+                       help="Only draft these buckets and append to the existing drafts")
+    draft.add_argument("--seed", type=int, help="Sampling seed (default from configs/eval.yaml)")
+    draft.add_argument("--oversample", type=float, default=1.5,
+                       help="Passages sampled per needed item")
     draft.set_defaults(func=_draft_golden)
 
     build = sub.add_parser("build-golden", help="Merge reviewed items and freeze the golden set")

@@ -122,3 +122,27 @@ def test_write_review_file(tmp_path):
 @pytest.mark.parametrize("bad", [{"question": "q"}, {"question": "q", "answer": "a", "quotes": []}])
 def test_draft_rejects_incomplete_json(bad):
     assert draft_item(passage(), FakeClient([bad])) is None
+
+
+def test_draft_all_skips_questions_seen_before():
+    client = FakeClient([reply(), reply(question="Who has to approve a merge request?")])
+    items = draft_all([passage("a"), passage("b")], client, {"single_fact:engineering": 1},
+                      seen_questions={"How many sign-offs does a change need before it lands?"})
+    assert [i.id for i in items] == ["b"]
+
+
+def test_null_question_means_no_natural_combination():
+    assert draft_item(passage(), FakeClient([{"question": None, "answer": None,
+                                              "quotes": []}])) is None
+
+
+def test_write_review_file_append_keeps_existing_decisions(tmp_path):
+    first = draft_item(passage("a"), FakeClient([reply()]))
+    second = draft_item(passage("b"), FakeClient([reply(question="Who approves a change?")]))
+    path = tmp_path / "review.md"
+    write_review_file([first], path)
+    path.write_text(path.read_text().replace("- [ ] accept", "- [x] accept"))
+    write_review_file([second], path, append=True)
+    text = path.read_text()
+    assert text.count("# Golden set v1") == 1
+    assert "- [x] accept" in text and "## b" in text
