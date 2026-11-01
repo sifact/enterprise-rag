@@ -5,11 +5,16 @@ description = "Enterprise RAG with RBAC, guardrails, evals and CI over a GitLab-
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "deepeval==4.3.1",
     "numpy>=2.0",
     "openpyxl>=3.1",
     "pandas>=2.2",
     "playwright>=1.48",
+    "pypdf>=6.0",
+    "python-dotenv>=1.0",
     "pyyaml>=6.0",
+    "rank-bm25>=0.2.2",
+    "rapidfuzz>=3.14",
     "requests>=2.32",
 ]
 

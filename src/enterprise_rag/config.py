@@ -145,3 +145,43 @@ def _validate_roles(cfg: DataConfig) -> None:
     unknown = used - set(cfg.roles)
     if unknown:
         raise ValueError(f"Roles used in config but not declared in `roles`: {sorted(unknown)}")
+
+
+DEFAULT_EVAL_CONFIG_PATH = PROJECT_ROOT / "configs" / "eval.yaml"
+
+
+@dataclass(frozen=True)
+class EvalConfig:
+    """Typed view of configs/eval.yaml: models, thresholds and paths for the golden set."""
+
+    seed: int
+    drafting_model: str
+    judge_model: str
+    generator_model: str
+    quote_match_threshold: float
+    numeric_tolerance: float
+    top_k: int
+    golden_path: Path
+    fixtures_dir: Path
+    runs_dir: Path
+    tokens_per_minute: int
+    model_prices_usd_per_mtok: dict[str, tuple[float, float]]
+
+
+def load_eval_config(path: Path = DEFAULT_EVAL_CONFIG_PATH) -> EvalConfig:
+    raw = yaml.safe_load(path.read_text())
+    prices = raw.get("model_prices_usd_per_mtok") or {}
+    return EvalConfig(
+        seed=int(raw["seed"]),
+        drafting_model=raw["models"]["drafting"],
+        judge_model=raw["models"]["judge"],
+        generator_model=raw["models"]["generator"],
+        quote_match_threshold=float(raw["quote_match_threshold"]),
+        numeric_tolerance=float(raw["numeric_tolerance"]),
+        top_k=int(raw["top_k"]),
+        golden_path=_resolve(raw["paths"]["golden"]),
+        fixtures_dir=_resolve(raw["paths"]["fixtures"]),
+        runs_dir=_resolve(raw["paths"]["runs"]),
+        tokens_per_minute=int(raw["tokens_per_minute"]),
+        model_prices_usd_per_mtok={m: (float(p[0]), float(p[1])) for m, p in prices.items()},
+    )

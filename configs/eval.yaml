@@ -1,0 +1,25 @@
+# Golden set and evaluation harness settings. Model names live here, never in code.
+
+seed: 42
+
+models:
+  drafting: openai/gpt-oss-120b     # drafts golden items (reviewed afterwards)
+  judge: openai/gpt-oss-120b        # faithfulness, relevancy, citation checks
+  generator: qwen/qwen3.8-27b       # pipeline default; a different family from the judge
+
+# Groq free tier, measured from rate-limit headers on 2026-10-23.
+tokens_per_minute: 8000
+
+# A retrieved chunk counts as relevant when it holds >= this share of a gold quote.
+quote_match_threshold: 0.80
+# Numeric answers match within this relative tolerance after scale normalization.
+numeric_tolerance: 0.005
+top_k: 10
+
+paths:
+  golden: eval/golden/v1.jsonl
+  fixtures: eval/fixtures
+  runs: eval/runs
+
+# USD per million tokens as [input, output]. Cost is reported only for models listed here.
+model_prices_usd_per_mtok: {}
