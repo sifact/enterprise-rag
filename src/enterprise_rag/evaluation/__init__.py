@@ -26,6 +26,15 @@ from enterprise_rag.evaluation.golden import (
     validate_golden,
     word_count,
 )
+from enterprise_rag.evaluation.harness import (
+    ItemResult,
+    RunResult,
+    aggregate,
+    load_run,
+    run_eval,
+    write_run,
+)
+from enterprise_rag.evaluation.report import render_ablation_table
 from enterprise_rag.evaluation.retrieval_metrics import (
     doc_hit_at_k,
     evidence_recall_at_k,
@@ -52,8 +61,11 @@ __all__ = [
     "GoldenItem",
     "GoldenValidationError",
     "GroqJudge",
+    "ItemResult",
     "NumericAnswer",
+    "RunResult",
     "UnknownDocumentError",
+    "aggregate",
     "answer_leak",
     "assign_splits",
     "chunk_is_relevant",
@@ -66,6 +78,7 @@ __all__ = [
     "item_from_dict",
     "judge_metrics",
     "load_golden",
+    "load_run",
     "make_access_checker",
     "mrr_at_k",
     "ndcg_at_k",
@@ -76,8 +89,11 @@ __all__ = [
     "quote_match_score",
     "refusal_correct",
     "relevance_vector",
+    "render_ablation_table",
     "retrieval_leak",
+    "run_eval",
     "save_golden",
     "validate_golden",
     "word_count",
+    "write_run",
 ]
