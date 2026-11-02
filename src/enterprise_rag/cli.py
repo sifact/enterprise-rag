@@ -56,10 +56,9 @@ from enterprise_rag.evaluation import (
 )
 from enterprise_rag.indexing import FastEmbedders, build_index, chunk_corpus, open_client
 from enterprise_rag.llm import GroqClient
-from enterprise_rag.retrieval import ReferenceBM25
+from enterprise_rag.pipeline import PIPELINE_NAMES, build_pipeline, collection_name
 
 SOURCES = ("handbook", "sec", "synthetic")
-PIPELINES = {"reference-bm25": ReferenceBM25}
 SAFETY_CATEGORIES = {c for c, b in CATEGORIES.items() if b == "refuse"} | {"indirect_injection"}
 TWIN_NOTE = re.compile(r"twin: ([\w-]+)")
 log = logging.getLogger("enterprise_rag")
@@ -102,8 +101,8 @@ def _eval(args: argparse.Namespace) -> None:
         items = [i for i in items if i.category != "indirect_injection"]
 
     manifest = read_manifest(data_cfg.manifest_path)
-    fixtures_dir = cfg.fixtures_dir if args.safety_only else None
-    pipeline = PIPELINES[args.pipeline](manifest, data_cfg.raw_dir, fixtures_dir=fixtures_dir)
+    pipeline = build_pipeline(args.pipeline, data_cfg, load_rag_config(), cfg,
+                              safety=args.safety_only)
     judge = None
     if not (args.retrieval_only or args.safety_only):
         judge = GroqJudge(GroqClient(cfg.judge_model, cfg.tokens_per_minute))
@@ -154,13 +153,10 @@ def _draft_golden(args: argparse.Namespace) -> None:
         print(f"  {cat:<14} {n}")
 
 
-SAFETY_SUFFIX = "_safety"
-
-
 def _build_index(args: argparse.Namespace) -> None:
     data_cfg, rag = load_config(args.config), load_rag_config()
     fixtures = load_eval_config().fixtures_dir if args.with_fixtures else None
-    collection = rag.collection + (SAFETY_SUFFIX if args.with_fixtures else "")
+    collection = collection_name(rag, safety=args.with_fixtures)
     chunks = chunk_corpus(read_manifest(data_cfg.manifest_path), data_cfg.raw_dir, rag, fixtures)
     n = build_index(chunks, FastEmbedders(rag), open_client(rag), collection)
     print(f"Indexed {n} chunks into {collection} at {rag.index_dir}")
@@ -233,7 +229,7 @@ def main() -> None:
     fetch.set_defaults(func=_fetch_data)
 
     ev = sub.add_parser("eval", help="Score a pipeline on the golden set")
-    ev.add_argument("--pipeline", choices=sorted(PIPELINES), required=True)
+    ev.add_argument("--pipeline", choices=PIPELINE_NAMES, required=True)
     ev.add_argument("--split", choices=("dev", "test", "all"), default="test")
     ev.add_argument("--golden", type=Path, help="Golden JSONL (default from configs/eval.yaml)")
     only = ev.add_mutually_exclusive_group()

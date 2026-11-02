@@ -6,7 +6,7 @@ supply it; a pipeline never reads the role from the question text.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Protocol, runtime_checkable
 
 from enterprise_rag.llm import Usage
@@ -18,6 +18,9 @@ class RetrievedChunk:
     chunk_id: str
     text: str
     score: float
+    rerank_score: float | None = None
+    # Display details for citations and the UI: title, section, page, allowed_roles, source_url.
+    meta: dict = field(default_factory=dict, compare=False)
 
 
 @dataclass(frozen=True)
