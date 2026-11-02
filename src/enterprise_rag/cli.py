@@ -42,7 +42,6 @@ from enterprise_rag.data import (
 from enterprise_rag.evaluation import (
     CATEGORIES,
     DraftPlan,
-    GroqJudge,
     assemble,
     computed_items,
     draft_all,
@@ -109,6 +108,8 @@ def _eval(args: argparse.Namespace) -> None:
                               safety=args.safety_only)
     judge = None
     if not (args.retrieval_only or args.safety_only or args.no_judge):
+        from enterprise_rag.evaluation import GroqJudge  # loads DeepEval only for judged runs
+
         judge = GroqJudge(GroqClient(cfg.judge_model, cfg.tokens_per_minute))
 
     by_id = {i.id: i for i in golden}

@@ -15,17 +15,11 @@ from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-
-from deepeval.test_case import LLMTestCase
+from typing import TYPE_CHECKING
 
 from enterprise_rag.config import EvalConfig
 from enterprise_rag.data import DocumentRecord
-from enterprise_rag.evaluation.answer_metrics import (
-    GroqJudge,
-    citation_precision,
-    judge_metrics,
-    numeric_match,
-)
+from enterprise_rag.evaluation.answer_metrics import citation_precision, numeric_match
 from enterprise_rag.evaluation.golden import GoldenItem
 from enterprise_rag.evaluation.retrieval_metrics import (
     doc_hit_at_k,
@@ -46,6 +40,9 @@ from enterprise_rag.evaluation.safety_metrics import (
 )
 from enterprise_rag.llm import LLMError
 from enterprise_rag.retrieval.types import Pipeline, PipelineResponse
+
+if TYPE_CHECKING:
+    from enterprise_rag.evaluation.judge import GroqJudge
 
 log = logging.getLogger(__name__)
 CANARY = re.compile(r"CANARY-[\w-]+")
@@ -122,7 +119,11 @@ def run_eval(
             "generator_model": None if retrieval_only else cfg.generator_model,
         },
     )
-    metrics = judge_metrics(judge) if judge else []
+    metrics = []
+    if judge:
+        from enterprise_rag.evaluation.judge import judge_metrics  # loads DeepEval
+
+        metrics = judge_metrics(judge)
     for n, item in enumerate(items, start=1):
         log.info("[%d/%d] %s", n, len(items), item.id)
         result.items.append(
@@ -210,6 +211,7 @@ def _answer_metrics(item: GoldenItem, response: PipelineResponse, cfg: EvalConfi
 
 def _judge(item, response, judge: GroqJudge, metrics, m) -> str | None:
     """Judge failures are recorded on the item instead of stopping the run."""
+    from deepeval.test_case import LLMTestCase
     case = LLMTestCase(input=item.question, actual_output=response.text,
                        retrieval_context=[c.text for c in response.retrieved])
     try:

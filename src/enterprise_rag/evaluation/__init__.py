@@ -1,9 +1,7 @@
 """Golden set, evidence matching, metrics and the evaluation harness."""
 
 from enterprise_rag.evaluation.answer_metrics import (
-    GroqJudge,
     citation_precision,
-    judge_metrics,
     numeric_match,
     parse_numbers,
 )
@@ -80,7 +78,6 @@ __all__ = [
     "Evidence",
     "GoldenItem",
     "GoldenValidationError",
-    "GroqJudge",
     "ItemResult",
     "NumericAnswer",
     "Passage",
@@ -104,7 +101,6 @@ __all__ = [
     "hit_at_k",
     "injection_followed",
     "item_from_dict",
-    "judge_metrics",
     "load_golden",
     "load_handwritten",
     "load_run",
@@ -131,3 +127,12 @@ __all__ = [
     "write_review_file",
     "write_run",
 ]
+
+
+def __getattr__(name: str):
+    """GroqJudge and judge_metrics load DeepEval, so they are imported only when asked for."""
+    if name in ("GroqJudge", "judge_metrics"):
+        from enterprise_rag.evaluation import judge
+
+        return getattr(judge, name)
+    raise AttributeError(name)

@@ -1,4 +1,4 @@
-"""Answer quality: exact numeric match, DeepEval judge metrics and citation precision.
+"""Answer quality: exact numeric match and citation precision (the DeepEval judge is in judge.py).
 
 Numbers are compared deterministically after scale normalization, so finance answers don't
 depend on an LLM judge. The judge (a different model family from the generator) is used for
@@ -9,14 +9,10 @@ from __future__ import annotations
 
 import re
 
-from deepeval.metrics import AnswerRelevancyMetric, FaithfulnessMetric
-from deepeval.models import DeepEvalBaseLLM
-
 from enterprise_rag.evaluation.golden import GoldenItem
 from enterprise_rag.llm import GroqClient
 from enterprise_rag.retrieval.types import PipelineResponse
 
-JUDGE_THRESHOLD = 0.7
 CITATION_PROMPT_VERSION = "citation-v1"
 CITATION_SYSTEM = (
     "You check citations in an answer. Given an ANSWER and one cited SOURCE passage, decide "
@@ -62,38 +58,6 @@ def numeric_match(item: GoldenItem, answer_text: str, tolerance: float) -> bool:
         _close(n, target, tolerance) or _close(n * item.numeric_answer.scale, target, tolerance)
         for n in parse_numbers(answer_text)
     )
-
-
-class GroqJudge(DeepEvalBaseLLM):
-    """Lets DeepEval metrics call our rate-limited Groq client instead of OpenAI."""
-
-    def __init__(self, client: GroqClient):
-        self.client = client
-        super().__init__(model=client.model)
-
-    def load_model(self):
-        return self.client
-
-    def generate(self, prompt: str, schema=None):
-        if schema is not None:
-            data, _ = self.client.complete_json("Reply with JSON only.", prompt)
-            return schema.model_validate(data)
-        text, _ = self.client.complete_text("You are a careful evaluator.", prompt)
-        return text
-
-    async def a_generate(self, prompt: str, schema=None):
-        return self.generate(prompt, schema)
-
-    def get_model_name(self) -> str:
-        return self.client.model
-
-
-def judge_metrics(judge: GroqJudge) -> list:
-    """Synchronous metrics: the client is already paced, so async fan-out would only hit 429s."""
-    return [
-        FaithfulnessMetric(threshold=JUDGE_THRESHOLD, model=judge, async_mode=False),
-        AnswerRelevancyMetric(threshold=JUDGE_THRESHOLD, model=judge, async_mode=False),
-    ]
 
 
 def citation_precision(item: GoldenItem, response: PipelineResponse, judge: GroqClient) -> float:
