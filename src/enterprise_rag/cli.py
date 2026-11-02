@@ -9,6 +9,7 @@
 - `enterprise-rag serve [--host] [--port]`: run the web app (API + built UI).
 - `enterprise-rag gate RUN.json...`: exit 1 if any run leaked a document across roles (CI).
 - `enterprise-rag export-web-data`: write deploy/meta.json and deploy/results.json for Vercel.
+- `enterprise-rag build-cloud-index`: upload both collections to Qdrant Cloud (QDRANT_URL/KEY).
 """
 
 from __future__ import annotations
@@ -241,6 +242,24 @@ def _serve(args: argparse.Namespace) -> None:
 DEPLOY_DIR = PROJECT_ROOT / "deploy"
 
 
+def _build_cloud_index(args: argparse.Namespace) -> None:
+    from dotenv import load_dotenv
+
+    from enterprise_rag.indexing.cloud_store import build_cloud_index, open_cloud_client
+
+    load_dotenv(PROJECT_ROOT / ".env")
+    data_cfg, rag = load_config(args.config), load_rag_config()
+    client = open_cloud_client(os.environ["QDRANT_URL"], os.environ["QDRANT_API_KEY"])
+    manifest = read_manifest(data_cfg.manifest_path)
+    for safety in (False, True):
+        fixtures = load_eval_config().fixtures_dir if safety else None
+        collection = rag.cloud_collection + ("_safety" if safety else "")
+        chunks = chunk_corpus(manifest, data_cfg.raw_dir, rag, fixtures)
+        n = build_cloud_index(chunks, client, collection, rag.cloud_dense_model,
+                              rag.cloud_sparse_model)
+        print(f"Uploaded {n} chunks to {collection}")
+
+
 def _export_web_data(args: argparse.Namespace) -> None:
     """Snapshot what the serverless API shows, so it never reads the corpus or run files."""
     from enterprise_rag.serving import build_meta, load_results
@@ -318,6 +337,9 @@ def main() -> None:
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))
     serve.set_defaults(func=_serve)
+
+    cloud = sub.add_parser("build-cloud-index", help="Upload the index to Qdrant Cloud")
+    cloud.set_defaults(func=_build_cloud_index)
 
     export = sub.add_parser("export-web-data", help="Write deploy/meta.json and results.json")
     export.set_defaults(func=_export_web_data)

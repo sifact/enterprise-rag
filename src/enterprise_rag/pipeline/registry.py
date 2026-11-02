@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 from enterprise_rag.config import DataConfig, EvalConfig, RagConfig
 from enterprise_rag.data import read_manifest
 from enterprise_rag.generation import Generator
@@ -20,7 +22,14 @@ RETRIEVERS: dict[str, dict] = {
     "hybrid-dbsf": {"mode": "hybrid", "fusion": "dbsf", "rerank": False},
     "hybrid-rerank": {"mode": "hybrid", "fusion": "rrf", "rerank": True},
 }
-PIPELINE_NAMES = ("reference-bm25", *RETRIEVERS, "rag")
+# The deployed (Qdrant Cloud) variants: same comparison, server-side MiniLM + BM25 embeddings.
+CLOUD_RETRIEVERS: dict[str, dict] = {
+    "cloud-dense": {"mode": "dense", "fusion": "rrf"},
+    "cloud-bm25": {"mode": "sparse", "fusion": "rrf"},
+    "cloud-hybrid": {"mode": "hybrid", "fusion": "rrf"},
+    "cloud-hybrid-dbsf": {"mode": "hybrid", "fusion": "dbsf"},
+}
+PIPELINE_NAMES = ("reference-bm25", *RETRIEVERS, "rag", *CLOUD_RETRIEVERS, "rag-cloud")
 # Best retrieval variant on the dev split (nDCG@10 0.895); reranking lowered it (see ledger).
 RAG_RETRIEVER = "hybrid-dbsf"
 
@@ -49,6 +58,17 @@ def build_pipeline(name: str, data: DataConfig, rag: RagConfig, ev: EvalConfig,
         return build_retriever(name, rag, safety)
     if name == "rag":
         return build_rag(rag, ev, safety)
+    if name in CLOUD_RETRIEVERS or name == "rag-cloud":
+        from enterprise_rag.retrieval.cloud import CloudRetriever
+        from enterprise_rag.serving.cloud_app import build_cloud_rag, cloud_client
+
+        collection = collection_name(replace(rag, collection=rag.cloud_collection), safety)
+        if name == "rag-cloud":
+            return build_cloud_rag(cloud_client(), collection)
+        return CloudRetriever(cloud_client(), collection, dense_model=rag.cloud_dense_model,
+                              sparse_model=rag.cloud_sparse_model,
+                              prefetch_limit=rag.prefetch_limit, name=name,
+                              **CLOUD_RETRIEVERS[name])
     raise ValueError(f"Unknown pipeline {name!r}; choose from {PIPELINE_NAMES}")
 
 
