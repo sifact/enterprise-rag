@@ -21,10 +21,22 @@ ROLE_INFO = {
     "finance": ("Finance", "Finance pages, SEC filings and budget spreadsheets"),
     "c_level": ("Executive (c_level)", "Everything in the company"),
 }
-OWN_TEAM = ("single_fact", "multi_hop", "sec_lookup", "spreadsheet_lookup",
-            "cross_source_finance", "c_level")
+# Most distinctive question types first; the Playground shows one of each before repeating.
+OWN_TEAM = ("cross_source_finance", "sec_lookup", "spreadsheet_lookup", "multi_hop", "c_level",
+            "single_fact", "general_page")
 SOURCE_LABELS = {"handbook": "GitLab handbook pages", "sec": "SEC filings (10-K, 10-Q)",
                  "synthetic": "Finance spreadsheets (fictional)"}
+
+
+def _varied(items: Sequence[GoldenItem]) -> list[str]:
+    """Questions ordered by OWN_TEAM priority, one per category first, then the rest."""
+    ranked = sorted(items, key=lambda i: (OWN_TEAM.index(i.category), i.id))
+    firsts, seen = [], set()
+    for item in ranked:
+        if item.category not in seen:
+            firsts.append(item)
+            seen.add(item.category)
+    return [i.question for i in firsts + [i for i in ranked if i not in firsts]]
 
 
 def build_meta(manifest: Sequence[DocumentRecord], golden: Sequence[GoldenItem],
@@ -32,7 +44,7 @@ def build_meta(manifest: Sequence[DocumentRecord], golden: Sequence[GoldenItem],
     visible = Counter(r for rec in manifest for r in rec.allowed_roles)
     by_role = {}
     for role in roles:
-        own = [i.question for i in golden if i.asked_as == role and i.category in OWN_TEAM]
+        own = _varied([i for i in golden if i.asked_as == role and i.category in OWN_TEAM])
         other = [i.question for i in golden if i.asked_as == role and i.category == "cross_role"]
         by_role[role] = {"own_team": own[:per_role], "other_team": other[:2]}
     attacks = (
