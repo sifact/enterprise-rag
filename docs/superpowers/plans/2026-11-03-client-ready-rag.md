@@ -182,3 +182,29 @@
 - [ ] **Step 5:** `docker build` and run the image locally; open both tabs; ask one question per example group.
 - [ ] **Step 6:** `uv run ruff check src tests && uv run pytest -q && npm --prefix web run build` all clean.
 - [ ] **Step 7: Commit** `"Add Docker image, CI and demo instructions"`. Deployment waits for the user's choice of host.
+
+---
+
+## Addendum (2026-11-03): deploy everything on Vercel
+
+**Why:** the user needs a free host without Docker or a card. The local-model backend needs ~550 MB of RAM and a 56 MB on-disk index, which fits neither Vercel functions (250 MB bundle, no persistent disk) nor Render/Koyeb free (512 MB). Hugging Face Spaces and Google Cloud are ruled out by the user.
+
+**Architecture change:** the search index moves to a Qdrant Cloud free cluster, and embeddings are computed by Qdrant Cloud Inference (`sentence-transformers/all-minilm-l6-v2` dense, `qdrant/bm25` sparse; both free on free clusters). The backend becomes a slim FastAPI function on Vercel; the React app is served by Vercel as static files. The cross-encoder relevance check is replaced by the top dense similarity, calibrated on dev.
+
+**Supersedes:** Task 10's Docker step (Docker removed at the user's request).
+
+### Task 11: Slim serving import chain
+- Package `__init__` files that pull heavy modules (pandas, fastembed, rapidfuzz, DeepEval, playwright) load them lazily, so `enterprise_rag.serving` + `enterprise_rag.pipeline.rag` import with only fastapi, qdrant-client, requests, pyyaml, python-dotenv and pydantic installed.
+- `enterprise-rag export-web-data` writes `deploy/meta.json` (roles, examples, corpus counts) so the function never reads the manifest or golden set.
+- Test: `test_serving_imports_stay_light` (a subprocess imports the serving entry point and asserts pandas, fastembed, deepeval and rapidfuzz are not in `sys.modules`).
+
+### Task 12: Qdrant Cloud index and retriever
+- `indexing/cloud_store.py`: `build_cloud_index(chunks, client, collection, dense_model, sparse_model)` upserts text as `models.Document` for both vectors, with a keyword payload index on `allowed_roles`.
+- `retrieval/cloud.py`: `CloudRetriever(client, collection, mode, fusion, dense_model, sparse_model)` implementing `search(question, role, k)` with the role filter inside every prefetch, plus `evidence(question, role)` = top dense cosine.
+- Tests with a fake client that records requests: role filter in every prefetch; `Document` objects carry the configured model names.
+- Measure on dev (dense, sparse, hybrid RRF, hybrid DBSF), keep the best; calibrate `evidence_threshold` (≤ 1 in 20 false refusals); run test-split safety and no-judge full evaluations; update README and the About copy (MiniLM replaces bge-small; no cross-encoder).
+
+### Task 13: Vercel deployment
+- `api/index.py` exposes the FastAPI app; `vercel.json` builds `web/` to static files, routes `/api/*` to the function (maxDuration 60 s), and `requirements.txt` lists only the slim runtime dependencies.
+- Session secret, Groq key and Qdrant credentials come from Vercel environment variables; the in-memory cache and rate limits are per function instance (documented).
+- Deploy, run the browser checks against the live URL (both tabs, both themes, desktop and phone), then add the live URL to the README and `~/Documents/deployed-links.md`.
