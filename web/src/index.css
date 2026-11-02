@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans-condensed/500.css";
+@import "@fontsource/ibm-plex-sans-condensed/600.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Light theme tokens (see web/DESIGN.md); .dark overrides them. */
+:root {
+  --ink: #f5f7fa;
+  --panel: #ffffff;
+  --rule: #d9dfe7;
+  --text: #17202b;
+  --muted: #566273;
+  --focus: #1d5fd1;
+  --r-engineering: #1f5cc4;
+  --r-hr: #b03566;
+  --r-marketing: #8f5a00;
+  --r-legal: #5b43c7;
+  --r-sales: #137352;
+  --r-finance: #0d6b80;
+  --r-c_level: #3d4654;
+  color-scheme: light;
+}
+
+.dark {
+  --ink: #141a23;
+  --panel: #1b2330;
+  --rule: #2c3747;
+  --text: #e7ebf1;
+  --muted: #9ba7b6;
+  --focus: #7fb0ff;
+  --r-engineering: #6ea2ff;
+  --r-hr: #f08dae;
+  --r-marketing: #f0b04a;
+  --r-legal: #a493f5;
+  --r-sales: #4fc79a;
+  --r-finance: #56c2d8;
+  --r-c_level: #d9dde3;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-panel: var(--panel);
+  --color-rule: var(--rule);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-focus: var(--focus);
+  --color-role: var(--role, var(--text));
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-cond: "IBM Plex Sans Condensed", "IBM Plex Sans", ui-sans-serif, sans-serif;
+}
+
+html {
+  background: var(--ink);
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.fade-in {
+  animation: fade-in 220ms ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -6,6 +6,7 @@
 - `enterprise-rag draft-golden`: LLM-draft answerable items for review.
 - `enterprise-rag build-golden [--spot-check]`: merge reviewed items and freeze the set.
 - `enterprise-rag build-index [--with-fixtures]`: chunk the corpus and build the search index.
+- `enterprise-rag serve [--host] [--port]`: run the web app (API + built UI).
 """
 
 from __future__ import annotations
@@ -13,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 from collections import Counter
 from dataclasses import replace
@@ -20,6 +22,7 @@ from pathlib import Path
 
 from enterprise_rag.config import (
     DEFAULT_CONFIG_PATH,
+    PROJECT_ROOT,
     load_config,
     load_eval_config,
     load_rag_config,
@@ -56,7 +59,7 @@ from enterprise_rag.evaluation import (
 )
 from enterprise_rag.indexing import FastEmbedders, build_index, chunk_corpus, open_client
 from enterprise_rag.llm import GroqClient
-from enterprise_rag.pipeline import PIPELINE_NAMES, build_pipeline, collection_name
+from enterprise_rag.pipeline import PIPELINE_NAMES, build_pipeline, build_rag, collection_name
 
 SOURCES = ("handbook", "sec", "synthetic")
 SAFETY_CATEGORIES = {c for c, b in CATEGORIES.items() if b == "refuse"} | {"indirect_injection"}
@@ -214,6 +217,24 @@ def _write_spot_check(review_path: Path, items) -> None:
     print(f"Spot-check list ({len(items)} items) added to {review_path}")
 
 
+def _serve(args: argparse.Namespace) -> None:
+    import uvicorn
+
+    from enterprise_rag.serving import build_meta, create_app
+
+    data_cfg, rag, ev = load_config(args.config), load_rag_config(), load_eval_config()
+    meta = build_meta(read_manifest(data_cfg.manifest_path), load_golden(ev.golden_path),
+                      data_cfg.roles)
+    # The demo searches the collection that includes the poisoned pages, so visitors can see
+    # the injection defences work.
+    pipeline = build_rag(rag, ev, safety=True)
+    app = create_app(pipeline, rag, data_cfg.roles, meta, runs_dir=ev.runs_dir,
+                     static_dir=PROJECT_ROOT / "web" / "dist",
+                     secret=os.environ.get("SESSION_SECRET"))
+    uvicorn.run(app, host=args.host, port=args.port, proxy_headers=True,
+                forwarded_allow_ips="*")
+
+
 def _report(args: argparse.Namespace) -> None:
     print(render_ablation_table(args.runs))
 
@@ -256,6 +277,11 @@ def main() -> None:
     index.add_argument("--with-fixtures", action="store_true",
                        help="Also index the poisoned pages (separate collection, safety runs)")
     index.set_defaults(func=_build_index)
+
+    serve = sub.add_parser("serve", help="Run the web app: API plus the built UI")
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))
+    serve.set_defaults(func=_serve)
 
     rep = sub.add_parser("report", help="Print the ablation table from run files")
     rep.add_argument("runs", type=Path, nargs="+")
