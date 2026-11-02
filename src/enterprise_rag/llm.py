@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import threading
 import time
 from dataclasses import dataclass
 
@@ -42,12 +43,17 @@ class _TokenBucket:
     """Spends estimated tokens per call and sleeps until the per-minute budget refills."""
 
     def __init__(self, tokens_per_minute: int):
+        self._lock = threading.Lock()  # passage checks call the client from several threads
         self.capacity = float(tokens_per_minute)
         self.rate = tokens_per_minute / 60.0
         self.tokens = self.capacity
         self.updated = time.monotonic()
 
     def take(self, n: float) -> None:
+        with self._lock:
+            self._take(n)
+
+    def _take(self, n: float) -> None:
         n = min(n, self.capacity)  # an oversized request still goes through once the bucket is full
         now = time.monotonic()
         self.tokens = min(self.capacity, self.tokens + (now - self.updated) * self.rate)

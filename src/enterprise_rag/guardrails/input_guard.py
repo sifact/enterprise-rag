@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from typing import Literal
 
@@ -16,6 +17,7 @@ from enterprise_rag.llm import GroqClient, LLMError
 from enterprise_rag.retrieval.types import RetrievedChunk
 
 GUARD_MAX_CHARS = 2000  # Prompt Guard reads at most 512 tokens
+CHECK_WORKERS = 6
 _SENTENCE = re.compile(r"(?<=[.!?])\s+|\n+")
 Kind = Literal["question", "passage"]
 
@@ -88,8 +90,9 @@ def filter_context(chunks: Sequence[RetrievedChunk], guard: InjectionGuard) -> C
     """Keep clean passages; cut planted instruction sentences out of flagged ones when a rule
     finds them and the rest then passes; drop the passage entirely otherwise."""
     kept, removed, cleaned = [], [], []
-    for chunk in chunks:
-        result = guard.check(chunk.text, kind="passage")
+    with ThreadPoolExecutor(max_workers=CHECK_WORKERS) as pool:  # one classifier call each
+        results = list(pool.map(lambda c: guard.check(c.text, kind="passage"), chunks))
+    for chunk, result in zip(chunks, results, strict=True):
         if not result.flagged:
             kept.append(chunk)
             continue
