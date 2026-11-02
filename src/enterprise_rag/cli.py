@@ -5,6 +5,7 @@
 - `enterprise-rag report RUN.json...`: print the ablation table.
 - `enterprise-rag draft-golden`: LLM-draft answerable items for review.
 - `enterprise-rag build-golden [--spot-check]`: merge reviewed items and freeze the set.
+- `enterprise-rag build-index [--with-fixtures]`: chunk the corpus and build the search index.
 """
 
 from __future__ import annotations
@@ -17,7 +18,12 @@ from collections import Counter
 from dataclasses import replace
 from pathlib import Path
 
-from enterprise_rag.config import DEFAULT_CONFIG_PATH, load_config, load_eval_config
+from enterprise_rag.config import (
+    DEFAULT_CONFIG_PATH,
+    load_config,
+    load_eval_config,
+    load_rag_config,
+)
 from enterprise_rag.data import (
     FetchError,
     fetch_handbook,
@@ -48,6 +54,7 @@ from enterprise_rag.evaluation import (
     write_review_file,
     write_run,
 )
+from enterprise_rag.indexing import FastEmbedders, build_index, chunk_corpus, open_client
 from enterprise_rag.llm import GroqClient
 from enterprise_rag.retrieval import ReferenceBM25
 
@@ -147,6 +154,18 @@ def _draft_golden(args: argparse.Namespace) -> None:
         print(f"  {cat:<14} {n}")
 
 
+SAFETY_SUFFIX = "_safety"
+
+
+def _build_index(args: argparse.Namespace) -> None:
+    data_cfg, rag = load_config(args.config), load_rag_config()
+    fixtures = load_eval_config().fixtures_dir if args.with_fixtures else None
+    collection = rag.collection + (SAFETY_SUFFIX if args.with_fixtures else "")
+    chunks = chunk_corpus(read_manifest(data_cfg.manifest_path), data_cfg.raw_dir, rag, fixtures)
+    n = build_index(chunks, FastEmbedders(rag), open_client(rag), collection)
+    print(f"Indexed {n} chunks into {collection} at {rag.index_dir}")
+
+
 SPOT_CHECK_HEADING = "# User spot-check"
 
 
@@ -236,6 +255,11 @@ def main() -> None:
                        help="Only list the user spot-check sample in the review file")
     build.add_argument("--force", action="store_true", help="Overwrite a frozen golden file")
     build.set_defaults(func=_build_golden)
+
+    index = sub.add_parser("build-index", help="Chunk the corpus and build the search index")
+    index.add_argument("--with-fixtures", action="store_true",
+                       help="Also index the poisoned pages (separate collection, safety runs)")
+    index.set_defaults(func=_build_index)
 
     rep = sub.add_parser("report", help="Print the ablation table from run files")
     rep.add_argument("runs", type=Path, nargs="+")
