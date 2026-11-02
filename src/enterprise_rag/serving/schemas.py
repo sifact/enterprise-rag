@@ -23,6 +23,7 @@ def ask_response(resp: PipelineResponse, role: str, question: str) -> dict:
     trace = resp.trace or {}
     used = trace.get("used") or [c.chunk_id for c in resp.retrieved]
     removed = {r["chunk_id"]: r["reason"] for r in trace.get("removed", [])}
+    cleaned = {r["chunk_id"]: r["reason"] for r in trace.get("cleaned", [])}
     by_id = {c.chunk_id: c for c in resp.retrieved}
 
     def number(chunk_id: str, fallback: int) -> int:
@@ -44,6 +45,7 @@ def ask_response(resp: PipelineResponse, role: str, question: str) -> dict:
                   "rerank_score": None if c.rerank_score is None else round(c.rerank_score, 3),
                   "cited": c.chunk_id in resp.citations, "used": c.chunk_id in used,
                   "removed_reason": removed.get(c.chunk_id),
+                  "cleaned_reason": cleaned.get(c.chunk_id),
                   "snippet": c.text[:SNIPPET_CHARS]}
                  for c in resp.retrieved]
     usage = resp.usage
@@ -51,6 +53,7 @@ def ask_response(resp: PipelineResponse, role: str, question: str) -> dict:
         "role": role, "question": question, "answer": resp.text, "refused": resp.refused,
         "refusal_reason": trace.get("refusal_reason"), "citations": citations,
         "retrieved": retrieved, "removed": trace.get("removed", []),
+        "cleaned": trace.get("cleaned", []),
         "guard": trace.get("guard"), "timings": trace.get("stages", {}),
         "top_score": trace.get("top_score"), "model": trace.get("model"),
         "prompt_version": trace.get("prompt_version"),

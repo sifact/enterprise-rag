@@ -32,7 +32,7 @@ class RagPipeline:
     def answer(self, question: str, role: str) -> PipelineResponse:
         stages: dict[str, float] = {}
         timed = _timer(stages)
-        trace: dict = {"stages": stages, "removed": [], "top_score": None,
+        trace: dict = {"stages": stages, "removed": [], "cleaned": [], "top_score": None,
                        "refusal_reason": None, "prompt_version": PROMPT_VERSION,
                        "model": self.generator.model}
 
@@ -55,9 +55,12 @@ class RagPipeline:
             return refuse("no_evidence", chunks)
 
         with timed("context_guard"):
-            kept, removed = filter_context(chunks, self.guard)
+            check = filter_context(chunks, self.guard)
+        kept = check.kept
         trace["removed"] = [{"chunk_id": c.chunk_id, "doc_id": c.doc_id, "reason": why}
-                            for c, why in removed]
+                            for c, why in check.removed]
+        trace["cleaned"] = [{"chunk_id": c.chunk_id, "doc_id": c.doc_id, "reason": why}
+                            for c, why in check.cleaned]
         if not kept:
             return refuse("no_evidence", chunks)
 
@@ -71,7 +74,9 @@ class RagPipeline:
         # A refusal never carries the model's own wording: it could repeat something the model
         # remembers from training rather than anything in the role's documents.
         text = "" if generated.refused else generated.answer
-        return PipelineResponse(text, generated.refused, citations, tuple(chunks),
+        cleaned = {c.chunk_id: c for c, _ in check.cleaned}
+        retrieved = tuple(cleaned.get(c.chunk_id, c) for c in chunks)
+        return PipelineResponse(text, generated.refused, citations, retrieved,
                                 generated.usage, trace)
 
 

@@ -9,13 +9,14 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Literal
 
 from enterprise_rag.llm import GroqClient, LLMError
 from enterprise_rag.retrieval.types import RetrievedChunk
 
 GUARD_MAX_CHARS = 2000  # Prompt Guard reads at most 512 tokens
+_SENTENCE = re.compile(r"(?<=[.!?])\s+|\n+")
 Kind = Literal["question", "passage"]
 
 # (reason, pattern, applies to passages too?)
@@ -69,14 +70,34 @@ class InjectionGuard:
         return GuardResult(False, score, note)
 
 
-def filter_context(chunks: Sequence[RetrievedChunk], guard: InjectionGuard
-                   ) -> tuple[list[RetrievedChunk], list[tuple[RetrievedChunk, str]]]:
-    """Drop passages that look like instructions to the model; return (kept, removed)."""
-    kept, removed = [], []
+@dataclass(frozen=True)
+class ContextCheck:
+    kept: list[RetrievedChunk]  # passages given to the model (cleaned ones included)
+    removed: list[tuple[RetrievedChunk, str]]  # dropped whole, with the reason
+    cleaned: list[tuple[RetrievedChunk, str]]  # kept after cutting instruction sentences
+
+
+def _cut_instructions(text: str) -> str | None:
+    """The text without sentences that trip a rule, or None if no sentence did."""
+    sentences = _SENTENCE.split(text)
+    kept = [s for s in sentences if not heuristic_flags(s, kind="passage")]
+    return " ".join(kept).strip() if len(kept) < len(sentences) else None
+
+
+def filter_context(chunks: Sequence[RetrievedChunk], guard: InjectionGuard) -> ContextCheck:
+    """Keep clean passages; cut planted instruction sentences out of flagged ones when a rule
+    finds them and the rest then passes; drop the passage entirely otherwise."""
+    kept, removed, cleaned = [], [], []
     for chunk in chunks:
         result = guard.check(chunk.text, kind="passage")
-        if result.flagged:
-            removed.append((chunk, result.reason))
-        else:
+        if not result.flagged:
             kept.append(chunk)
-    return kept, removed
+            continue
+        rest = _cut_instructions(chunk.text)
+        if rest and not guard.check(rest, kind="passage").flagged:
+            cleaned_chunk = replace(chunk, text=rest)
+            kept.append(cleaned_chunk)
+            cleaned.append((cleaned_chunk, result.reason))
+        else:
+            removed.append((chunk, result.reason))
+    return ContextCheck(kept, removed, cleaned)

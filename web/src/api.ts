@@ -36,6 +36,7 @@ export type Passage = {
   cited: boolean;
   used: boolean;
   removed_reason: string | null;
+  cleaned_reason: string | null;
   snippet: string;
 };
 
@@ -48,6 +49,7 @@ export type Answer = {
   citations: Citation[];
   retrieved: Passage[];
   removed: { chunk_id: string; doc_id: string; reason: string }[];
+  cleaned: { chunk_id: string; doc_id: string; reason: string }[];
   guard: { flagged: boolean; score: number; reason: string } | null;
   timings: Record<string, number>;
   top_score: number | null;

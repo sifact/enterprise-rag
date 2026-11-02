@@ -4,7 +4,7 @@ import type { Answer, Passage } from "../api";
 import { roleStyle, shortLabel } from "../roles";
 
 const REMOVED_REASON: Record<string, string> = {
-  classifier: "looked like instructions to the assistant (injection classifier)",
+  classifier: "looked like instructions to the assistant",
   instruction_override: "tells the assistant to ignore its instructions",
   prompt_extraction: "asks for the system prompt",
   role_play: "tries to change the assistant's role",
@@ -46,9 +46,16 @@ function steps(a: Answer): Step[] {
     label: "Passage check",
     ok: true,
     detail:
-      a.removed.length === 0
+      a.removed.length + a.cleaned.length === 0
         ? "No passage contained instructions"
-        : `${a.removed.length} passage${a.removed.length > 1 ? "s" : ""} removed for containing instructions`,
+        : [
+            a.cleaned.length > 0 &&
+              `${a.cleaned.length} passage${a.cleaned.length > 1 ? "s" : ""} had a planted instruction cut out`,
+            a.removed.length > 0 &&
+              `${a.removed.length} passage${a.removed.length > 1 ? "s" : ""} removed for containing instructions`,
+          ]
+            .filter(Boolean)
+            .join("; "),
     ms: t.context_guard,
   });
   out.push({
@@ -75,7 +82,9 @@ function PassageRow({ p, rank }: { p: Passage; rank: number }) {
   const [open, setOpen] = useState(false);
   const status = p.removed_reason
     ? `Removed: ${REMOVED_REASON[p.removed_reason] ?? p.removed_reason}`
-    : p.cited
+    : p.cleaned_reason
+      ? `Cleaned: a sentence that ${REMOVED_REASON[p.cleaned_reason] ?? "addressed the assistant"} was cut out${p.cited ? ", then cited" : ""}`
+      : p.cited
       ? "Cited in the answer"
       : p.used
         ? "Given to the model, not cited"
@@ -99,7 +108,7 @@ function PassageRow({ p, rank }: { p: Passage; rank: number }) {
             ) : null}
           </span>
           <span
-            className={`block text-[13px] ${p.removed_reason ? "text-[var(--r-hr)]" : "text-muted"}`}
+            className={`block text-[13px] ${p.removed_reason || p.cleaned_reason ? "text-[var(--r-hr)]" : "text-muted"}`}
           >
             {status}
           </span>
