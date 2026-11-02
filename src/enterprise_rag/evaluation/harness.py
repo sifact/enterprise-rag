@@ -44,6 +44,7 @@ from enterprise_rag.evaluation.safety_metrics import (
     refusal_correct,
     retrieval_leak,
 )
+from enterprise_rag.llm import LLMError
 from enterprise_rag.retrieval.types import Pipeline, PipelineResponse
 
 log = logging.getLogger(__name__)
@@ -152,7 +153,17 @@ def _eval_item(pipeline, item, cfg, allowed: AccessChecker, judge, metrics, retr
     error = None
     if not retrieval_only:
         start = time.perf_counter()
-        response = pipeline.answer(item.question, item.asked_as)
+        try:
+            response = pipeline.answer(item.question, item.asked_as)
+        except LLMError as exc:  # one outage costs one item, not the whole run
+            log.warning("%s: answer failed: %s", item.id, exc)
+            return ItemResult(
+                id=item.id, category=item.category, split=item.split, asked_as=item.asked_as,
+                expected_behavior=item.expected_behavior, metrics=m,
+                retrieved=[{"doc_id": c.doc_id, "chunk_id": c.chunk_id,
+                            "score": round(c.score, 4)} for c in chunks],
+                refused=None, latency_ms=round((time.perf_counter() - start) * 1000, 1),
+                error=f"answer: {exc}")
         m["retrieval_leak"] = m["retrieval_leak"] or retrieval_leak(item, response.retrieved,
                                                                     allowed)
         m.update(_answer_metrics(item, response, cfg, twin_reference))
@@ -236,6 +247,7 @@ def aggregate(items: Sequence[ItemResult]) -> dict[str, float]:
         for r in items
     ) if items else 0.0
     agg["n_items"] = len(items)
+    agg["n_errors"] = sum(r.error is not None for r in items)
     agg["n_retrieval_items"] = sum("hit@5" in r.metrics for r in items)
     latencies = [r.latency_ms for r in items]
     if latencies:

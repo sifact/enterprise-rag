@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from enterprise_rag.config import DataConfig, EvalConfig, RagConfig
 from enterprise_rag.data import read_manifest
+from enterprise_rag.generation import Generator
+from enterprise_rag.guardrails import InjectionGuard, groq_scorer
 from enterprise_rag.indexing import FastEmbedders, open_client
+from enterprise_rag.llm import GroqClient
+from enterprise_rag.pipeline.rag import RagPipeline
 from enterprise_rag.retrieval import HybridRetriever, Pipeline, ReferenceBM25
 
 SAFETY_SUFFIX = "_safety"
@@ -16,7 +20,8 @@ RETRIEVERS: dict[str, dict] = {
     "hybrid-dbsf": {"mode": "hybrid", "fusion": "dbsf", "rerank": False},
     "hybrid-rerank": {"mode": "hybrid", "fusion": "rrf", "rerank": True},
 }
-PIPELINE_NAMES = ("reference-bm25", *RETRIEVERS)
+PIPELINE_NAMES = ("reference-bm25", *RETRIEVERS, "rag")
+RAG_RETRIEVER = "hybrid-rerank"  # the best retrieval variant on the dev split
 
 
 def collection_name(rag: RagConfig, safety: bool) -> str:
@@ -41,4 +46,17 @@ def build_pipeline(name: str, data: DataConfig, rag: RagConfig, ev: EvalConfig,
                              fixtures_dir=ev.fixtures_dir if safety else None)
     if name in RETRIEVERS:
         return build_retriever(name, rag, safety)
+    if name == "rag":
+        return build_rag(rag, ev, safety)
     raise ValueError(f"Unknown pipeline {name!r}; choose from {PIPELINE_NAMES}")
+
+
+def build_rag(rag: RagConfig, ev: EvalConfig, safety: bool, client=None,
+              embedders=None) -> RagPipeline:
+    """The full answer pipeline over the chosen retriever, with Groq guard and generator."""
+    generator = Generator(GroqClient(rag.generator_model, ev.tokens_per_minute,
+                                     extra_body={"reasoning_format": "hidden"}))
+    guard = InjectionGuard(groq_scorer(GroqClient(rag.guard_model, ev.tokens_per_minute)),
+                           rag.guard_threshold)
+    retriever = build_retriever(RAG_RETRIEVER, rag, safety, client, embedders)
+    return RagPipeline(retriever, guard, generator, rag)

@@ -90,3 +90,19 @@ def test_refusal_accuracy_counts_only_refuse_items(make_item, manifest, tmp_path
                       retrieval_only=False, split="test")
     assert result.aggregates["refusal_accuracy"] == 1.0  # both refuse items were refused
     assert result.aggregates["false_refusal_rate"] == 1.0  # the answer item was refused
+
+
+class Flaky(FakePipeline):
+    def answer(self, question, role):
+        from enterprise_rag.llm import LLMError
+
+        raise LLMError("groq down")
+
+
+def test_llm_error_on_one_item_is_recorded_not_fatal(make_item, manifest, tmp_path):
+    cfg = replace(load_eval_config(), runs_dir=tmp_path)
+    result = run_eval(Flaky(), items(make_item), cfg, manifest, judge=None,
+                      retrieval_only=False, split="test")
+    assert len(result.items) == 3
+    assert all(r.error and "groq down" in r.error for r in result.items)
+    assert result.aggregates["n_errors"] == 3

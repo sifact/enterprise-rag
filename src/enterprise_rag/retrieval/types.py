@@ -30,6 +30,8 @@ class PipelineResponse:
     citations: tuple[str, ...]  # chunk IDs the answer cites
     retrieved: tuple[RetrievedChunk, ...]
     usage: Usage | None
+    # Per-stage timings, guard result, removed passages and refusal reason, for the UI.
+    trace: dict | None = field(default=None, compare=False)
 
 
 @runtime_checkable
