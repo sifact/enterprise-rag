@@ -107,7 +107,7 @@ def _eval(args: argparse.Namespace) -> None:
     pipeline = build_pipeline(args.pipeline, data_cfg, load_rag_config(), cfg,
                               safety=args.safety_only)
     judge = None
-    if not (args.retrieval_only or args.safety_only):
+    if not (args.retrieval_only or args.safety_only or args.no_judge):
         judge = GroqJudge(GroqClient(cfg.judge_model, cfg.tokens_per_minute))
 
     by_id = {i.id: i for i in golden}
@@ -257,6 +257,8 @@ def main() -> None:
     only.add_argument("--retrieval-only", action="store_true", help="Skip answers and the judge")
     only.add_argument("--safety-only", action="store_true",
                       help="Only refuse and injection items, with the poisoned fixtures indexed")
+    ev.add_argument("--no-judge", action="store_true",
+                    help="Skip the LLM-judge metrics (faithfulness, relevancy, citations)")
     ev.set_defaults(func=_eval)
 
     draft = sub.add_parser("draft-golden", help="LLM-draft answerable golden items for review")

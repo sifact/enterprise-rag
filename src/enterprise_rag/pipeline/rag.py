@@ -68,7 +68,10 @@ class RagPipeline:
         if generated.refused:
             trace["refusal_reason"] = generated.reason or "not_in_sources"
         citations = tuple(kept[n - 1].chunk_id for n in generated.citations)
-        return PipelineResponse(generated.answer, generated.refused, citations, tuple(chunks),
+        # A refusal never carries the model's own wording: it could repeat something the model
+        # remembers from training rather than anything in the role's documents.
+        text = "" if generated.refused else generated.answer
+        return PipelineResponse(text, generated.refused, citations, tuple(chunks),
                                 generated.usage, trace)
 
 

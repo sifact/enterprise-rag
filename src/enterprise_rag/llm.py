@@ -165,7 +165,7 @@ class GroqClient:
 
         if resp.status_code == 429 or resp.status_code >= 500:
             retry_after = resp.headers.get("retry-after")
-            raise _Retryable(f"HTTP {resp.status_code}",
+            raise _Retryable(f"{self.model} HTTP {resp.status_code}: {resp.text[:200]}",
                              float(retry_after) if retry_after is not None else None)
         if resp.status_code == 400 and "json_validate_failed" in resp.text:
             raise _Retryable("model output failed JSON validation")

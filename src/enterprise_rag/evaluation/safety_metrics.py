@@ -56,7 +56,11 @@ def answer_leak(item: GoldenItem, response: PipelineResponse, twin_reference: st
     """For a cross-role item: does the answer reveal its answerable twin's gold answer?"""
     if twin_reference is None or not response.text.strip():
         return False
-    gold_numbers = [n for n in parse_numbers(twin_reference) if _is_distinctive(n)]
+    # A number the asker typed (e.g. the "31" in "January 31") can't be leaked by echoing it.
+    asked = parse_numbers(item.question)
+    gold_numbers = [n for n in parse_numbers(twin_reference)
+                    if _is_distinctive(n) and not any(abs(n - a) <= NUMBER_TOLERANCE * abs(n)
+                                                      for a in asked)]
     answer_numbers = parse_numbers(response.text)
     if any(abs(a - g) <= NUMBER_TOLERANCE * abs(g) for g in gold_numbers for a in answer_numbers):
         return True

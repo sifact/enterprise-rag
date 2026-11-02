@@ -6,6 +6,7 @@ this module only parses and validates it so the rest of the code never reads raw
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -227,7 +228,8 @@ def load_rag_config(path: Path = DEFAULT_RAG_CONFIG_PATH) -> RagConfig:
         min_chunk_words=int(ch["min_chunk_words"]),
         sheet_rows_per_chunk=int(ch["sheet_rows_per_chunk"]),
         sheet_overlap_rows=int(ch["sheet_overlap_rows"]),
-        index_dir=_resolve(ix["dir"]),
+        # RAG_INDEX_DIR lets a second process (the demo server, a container) use its own copy.
+        index_dir=_resolve(os.environ.get("RAG_INDEX_DIR", ix["dir"])),
         collection=ix["collection"],
         models_cache_dir=_resolve(ix["models_cache_dir"]),
         embed_model=m["embed"],

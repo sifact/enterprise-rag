@@ -99,3 +99,10 @@ def test_custom_evidence_signal_gates_generation():
     r = p.answer("What's the weather?", "hr")
     assert r.refused and r.trace["refusal_reason"] == "no_evidence" and gen.calls == 0
     assert r.trace["top_score"] == -10.0
+
+
+def test_refused_generation_returns_no_model_text():
+    note = "The sources don't say, but I recall revenue was $955 million."
+    p, _ = pipeline([chunk(1, "x")], result=Generated(note, (), True, "not_in_sources", None))
+    r = p.answer("What was revenue?", "hr")
+    assert r.refused and r.text == "" and r.trace["refusal_reason"] == "not_in_sources"
