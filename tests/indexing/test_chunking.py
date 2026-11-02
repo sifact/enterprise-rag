@@ -1,4 +1,5 @@
 import re
+from itertools import pairwise
 
 import pytest
 
@@ -47,7 +48,7 @@ def test_long_section_split_with_overlap_never_mid_sentence():
     text = f"## Long\n\n{sentences(88)}\n"  # ~700 words
     chunks = chunk_document(rec(), [DocPage(None, text)], RAG)
     assert len(chunks) >= 3
-    for a, b in zip(chunks, chunks[1:], strict=False):
+    for a, b in pairwise(chunks):
         assert a.text.split(". ")[-1].strip(" .") in b.text  # overlap carried forward
     for c in chunks:
         assert len(c.text.split()) <= RAG.chunk_words + 8

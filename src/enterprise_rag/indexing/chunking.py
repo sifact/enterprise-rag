@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
+from itertools import pairwise
 from pathlib import Path
 
 from enterprise_rag.config import RagConfig
@@ -82,7 +83,7 @@ def _units(text: str, max_words: int) -> list[_Unit]:
 
 def _join(units: Sequence[_Unit]) -> str:
     text = units[0].text
-    for prev, cur in zip(units, units[1:], strict=False):
+    for prev, cur in pairwise(units):
         text += ("\n" if prev.is_line or cur.is_line else " ") + cur.text
     return text
 
