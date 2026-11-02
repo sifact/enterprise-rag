@@ -7,6 +7,7 @@
 - `enterprise-rag build-golden [--spot-check]`: merge reviewed items and freeze the set.
 - `enterprise-rag build-index [--with-fixtures]`: chunk the corpus and build the search index.
 - `enterprise-rag serve [--host] [--port]`: run the web app (API + built UI).
+- `enterprise-rag gate RUN.json...`: exit 1 if any run leaked a document across roles (CI).
 """
 
 from __future__ import annotations
@@ -235,6 +236,21 @@ def _serve(args: argparse.Namespace) -> None:
                 forwarded_allow_ips="*")
 
 
+def _gate(args: argparse.Namespace) -> None:
+    """CI gate: a single cross-role leak in any committed run fails the build."""
+    failed = []
+    for path in args.runs:
+        leak = json.loads(path.read_text())["aggregates"].get("leak_rate")
+        status = "ok" if leak == 0 else "LEAK"
+        print(f"{status:<5} leak_rate={leak} {path}")
+        if leak != 0:
+            failed.append(path)
+    if failed:
+        print(f"Leak gate failed for {len(failed)} run(s).")
+        raise SystemExit(1)
+    print("Leak gate passed.")
+
+
 def _report(args: argparse.Namespace) -> None:
     print(render_ablation_table(args.runs))
 
@@ -284,6 +300,10 @@ def main() -> None:
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))
     serve.set_defaults(func=_serve)
+
+    gate = sub.add_parser("gate", help="Fail (exit 1) if any run file has leak_rate > 0")
+    gate.add_argument("runs", type=Path, nargs="+")
+    gate.set_defaults(func=_gate)
 
     rep = sub.add_parser("report", help="Print the ablation table from run files")
     rep.add_argument("runs", type=Path, nargs="+")
