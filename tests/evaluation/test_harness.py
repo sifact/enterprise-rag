@@ -77,3 +77,16 @@ def test_render_ablation_table_has_header_and_dash_for_missing(make_item, manife
     lines = table.splitlines()
     assert lines[0].startswith("| Run | Config | hit@5 | MRR@10 | nDCG@10 | Faithfulness |")
     assert "| — |" in lines[2]  # no faithfulness in a retrieval-only run
+
+
+class AlwaysRefuses(FakePipeline):
+    def answer(self, question, role):
+        return PipelineResponse("", True, (), tuple(self.retrieve(question, role, 10)), None)
+
+
+def test_refusal_accuracy_counts_only_refuse_items(make_item, manifest, tmp_path):
+    cfg = replace(load_eval_config(), runs_dir=tmp_path)
+    result = run_eval(AlwaysRefuses(), items(make_item), cfg, manifest, judge=None,
+                      retrieval_only=False, split="test")
+    assert result.aggregates["refusal_accuracy"] == 1.0  # both refuse items were refused
+    assert result.aggregates["false_refusal_rate"] == 1.0  # the answer item was refused

@@ -177,8 +177,11 @@ def _eval_item(pipeline, item, cfg, allowed: AccessChecker, judge, metrics, retr
 
 def _answer_metrics(item: GoldenItem, response: PipelineResponse, cfg: EvalConfig,
                     twin_reference: str | None) -> dict:
-    m: dict[str, float | bool | None] = {"refusal_correct": refusal_correct(item, response)}
-    if item.expected_behavior == "answer":
+    m: dict[str, float | bool | None] = {}
+    # Refusal accuracy is defined on refuse items; answer items get the false-refusal rate.
+    if item.expected_behavior == "refuse":
+        m["refusal_correct"] = refusal_correct(item, response)
+    else:
         m["false_refusal"] = false_refusal(item, response)
     if item.numeric_answer is not None:
         m["numeric_match"] = numeric_match(item, response.text, cfg.numeric_tolerance)

@@ -75,7 +75,7 @@ uv run enterprise-rag report eval/runs/*.json
 |---|---|---|---|---|---|
 | BM25 over whole pages, test split | 0.828 | 0.810 | 0.823 | 0.862 | 0.000 |
 
-On the safety items it blocked all 5 direct injections and leaked nothing. Its refusal accuracy is 0.857 only because it also "refuses" the 2 indirect-injection test questions, which should be answered.
+On the 12 test items that must be refused it refused all of them (refusal accuracy 1.000), blocked all 5 direct injections and leaked nothing. Its false-refusal rate is 1.000 because it also "refuses" the 2 indirect-injection test questions, which should be answered.
 
 ## Attribution and licenses
 
