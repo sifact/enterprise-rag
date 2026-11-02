@@ -75,11 +75,13 @@ class GroqClient:
         api_key: str | None = None,
         session: requests.Session | None = None,
         max_tokens: int = DEFAULT_MAX_TOKENS,
+        extra_body: dict | None = None,
     ):
         if api_key is None and "GROQ_API_KEY" not in os.environ:
             load_dotenv(PROJECT_ROOT / ".env")
         self.model = model
         self.max_tokens = max_tokens
+        self.extra_body = dict(extra_body or {})  # model-specific options, e.g. reasoning_format
         self._api_key = api_key or os.environ.get("GROQ_API_KEY")
         if not self._api_key:
             raise LLMError("GROQ_API_KEY is not set (environment or .env)")
@@ -89,7 +91,8 @@ class GroqClient:
     def __repr__(self) -> str:
         return f"GroqClient(model={self.model!r})"
 
-    def complete_json(self, system: str, user: str, temperature: float = 0.0) -> tuple[dict, Usage]:
+    def complete_json(self, system: str, user: str, temperature: float = 0.0,
+                      max_tokens: int | None = None) -> tuple[dict, Usage]:
         def parse(content: str) -> dict:
             try:
                 data = json.loads(content)
@@ -99,21 +102,26 @@ class GroqClient:
                 raise _Retryable("JSON reply is not an object")
             return data
 
-        return self._chat(system, user, temperature, json_mode=True, parse=parse)
+        return self._chat(system, user, temperature, json_mode=True, parse=parse,
+                          max_tokens=max_tokens)
 
-    def complete_text(self, system: str, user: str, temperature: float = 0.0) -> tuple[str, Usage]:
-        return self._chat(system, user, temperature, json_mode=False, parse=lambda c: c)
+    def complete_text(self, system: str, user: str, temperature: float = 0.0,
+                      max_tokens: int | None = None) -> tuple[str, Usage]:
+        return self._chat(system, user, temperature, json_mode=False, parse=lambda c: c,
+                          max_tokens=max_tokens)
 
-    def _chat(self, system, user, temperature, json_mode, parse):
+    def _chat(self, system, user, temperature, json_mode, parse, max_tokens=None):
+        max_tokens = max_tokens or self.max_tokens
         payload = {
+            **self.extra_body,
             "model": self.model,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
             "temperature": temperature,
-            "max_tokens": self.max_tokens,
+            "max_tokens": max_tokens,
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
-        estimate = (len(system) + len(user)) / 4 + self.max_tokens
+        estimate = (len(system) + len(user)) / 4 + max_tokens
 
         last_error = ""
         for attempt in range(MAX_RETRIES + 1):

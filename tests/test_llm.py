@@ -79,3 +79,13 @@ def test_load_eval_config_defaults():
     cfg = load_eval_config()
     assert cfg.quote_match_threshold == 0.80
     assert cfg.judge_model == "openai/gpt-oss-120b"
+
+
+def test_extra_body_and_max_tokens_reach_payload(monkeypatch):
+    session = FakeSession([ok('{"a": 1}')])
+    monkeypatch.setenv("GROQ_API_KEY", "gsk_test")
+    client = GroqClient("m", tokens_per_minute=8000, session=session,
+                        extra_body={"reasoning_format": "hidden"})
+    client.complete_json("s", "u", max_tokens=123)
+    payload = session.calls[0]["json"]
+    assert payload["reasoning_format"] == "hidden" and payload["max_tokens"] == 123
