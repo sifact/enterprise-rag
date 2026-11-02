@@ -22,12 +22,15 @@ models:
 
 retrieval:
   prefetch_limit: 50          # candidates per search before fusion
-  rerank_candidates: 40       # fused candidates given to the cross-encoder
+  rerank_candidates: 40       # only for the hybrid-rerank ablation; reranking lost on dev
   context_chunks: 6           # passages handed to the answer model
 
 guardrails:
   guard_threshold: 0.9        # prompt-guard injection probability that blocks a question or passage
-  evidence_threshold: 0.0     # top rerank score below this refuses; calibrated on dev in Task 6
+  # Cross-encoder score of the best passage below this refuses before calling the answer model.
+  # Dev split: the strictest value with at most 1 in 20 answerable questions refused
+  # (1/29 refused, 3/9 must-refuse questions stopped early).
+  evidence_threshold: -7.0
 
 limits:
   max_question_chars: 500

@@ -19,9 +19,12 @@ from enterprise_rag.retrieval.types import PipelineResponse, RetrievedChunk
 
 class RagPipeline:
     def __init__(self, retriever, guard: InjectionGuard, generator, cfg: RagConfig,
-                 name: str = "rag"):
+                 name: str = "rag",
+                 evidence: Callable[[str, list[RetrievedChunk]], float] | None = None):
         self.retriever, self.guard, self.generator, self.cfg = retriever, guard, generator, cfg
         self.name = name
+        # How strongly the best passage answers the question; compared to evidence_threshold.
+        self.evidence = evidence or (lambda question, chunks: max(_strength(c) for c in chunks))
 
     def retrieve(self, question: str, role: str, k: int) -> list[RetrievedChunk]:
         return self.retriever.search(question, role, k)
@@ -46,7 +49,8 @@ class RagPipeline:
         with timed("search"):
             chunks = self.retriever.search(question, role, self.cfg.context_chunks)
         if chunks:
-            trace["top_score"] = max(_strength(c) for c in chunks)
+            with timed("evidence_check"):
+                trace["top_score"] = round(float(self.evidence(question, chunks)), 3)
         if not chunks or trace["top_score"] < self.cfg.evidence_threshold:
             return refuse("no_evidence", chunks)
 

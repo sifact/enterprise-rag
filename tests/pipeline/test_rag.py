@@ -66,7 +66,8 @@ def test_answer_cites_chunk_ids_and_fills_trace():
     r = p.answer("How long is parental leave?", "hr")
     assert not r.refused and r.text == "Leave is 16 weeks [2]."
     assert r.citations == ("doc2#c0000",)
-    assert set(r.trace["stages"]) == {"input_guard", "search", "context_guard", "generate"}
+    assert set(r.trace["stages"]) == {"input_guard", "search", "evidence_check", "context_guard",
+                                     "generate"}
     assert r.trace["model"] == "fake-gen" and r.usage.prompt_tokens == 10
 
 
@@ -89,3 +90,12 @@ def test_llm_outage_propagates():
     p, _ = pipeline([chunk(1, "x")], result=LLMError("down"))
     with pytest.raises(LLMError):
         p.answer("How long is parental leave?", "hr")
+
+
+def test_custom_evidence_signal_gates_generation():
+    p, gen = pipeline([chunk(1, "some passage", rerank=None)])
+    p.evidence = lambda question, chunks: -10.0
+    p.cfg = replace(CFG, evidence_threshold=-7.0)
+    r = p.answer("What's the weather?", "hr")
+    assert r.refused and r.trace["refusal_reason"] == "no_evidence" and gen.calls == 0
+    assert r.trace["top_score"] == -10.0
