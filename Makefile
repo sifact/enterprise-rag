@@ -1,5 +1,5 @@
 # Everyday commands. `make setup` once, then `make run`.
-.PHONY: setup index web run test gate docker
+.PHONY: setup index web run test gate
 
 setup:          ## install deps, fetch the corpus (needs SEC_USER_AGENT), build the index
 	uv sync
@@ -24,6 +24,3 @@ test:           ## lint and unit tests
 
 gate:           ## CI leak gate over the committed test runs
 	uv run enterprise-rag gate eval/runs/*-rag-test-safety.json eval/runs/*-test-retrieval.json
-
-docker:         ## build the container image (after `make setup`)
-	docker build -t enterprise-rag .
