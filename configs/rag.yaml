@@ -1,0 +1,35 @@
+# RAG pipeline settings: chunking, index, retrieval, guardrails, generation and public limits.
+# Every value here was either measured on the dev split or is a stated default (see comments).
+
+chunking:
+  chunk_words: 300            # ~400 tokens for bge-small (512-token limit), under the ~512 default
+  chunk_overlap_words: 40     # ~13% overlap
+  min_chunk_words: 80         # smaller heading sections merge with the next one
+  sheet_rows_per_chunk: 20
+  sheet_overlap_rows: 2       # computed gold quotes span up to 3 rows; overlap keeps them whole
+
+index:
+  dir: data/index
+  collection: chunks_v1
+  models_cache_dir: data/cache/models
+
+models:
+  embed: BAAI/bge-small-en-v1.5
+  sparse: Qdrant/bm25
+  rerank: Xenova/ms-marco-MiniLM-L-6-v2
+  guard: meta-llama/llama-prompt-guard-2-86m
+  generator: qwen/qwen3.8-27b
+
+retrieval:
+  prefetch_limit: 50          # candidates per search before fusion
+  rerank_candidates: 40       # fused candidates given to the cross-encoder
+  context_chunks: 6           # passages handed to the answer model
+
+guardrails:
+  guard_threshold: 0.9        # prompt-guard injection probability that blocks a question or passage
+  evidence_threshold: 0.0     # top rerank score below this refuses; calibrated on dev in Task 6
+
+limits:
+  max_question_chars: 500
+  rate_per_minute: 6
+  rate_per_day: 100

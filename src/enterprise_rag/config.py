@@ -185,3 +185,62 @@ def load_eval_config(path: Path = DEFAULT_EVAL_CONFIG_PATH) -> EvalConfig:
         tokens_per_minute=int(raw["tokens_per_minute"]),
         model_prices_usd_per_mtok={m: (float(p[0]), float(p[1])) for m, p in prices.items()},
     )
+
+
+DEFAULT_RAG_CONFIG_PATH = PROJECT_ROOT / "configs" / "rag.yaml"
+
+
+@dataclass(frozen=True)
+class RagConfig:
+    """Typed view of configs/rag.yaml: chunking, index, models, retrieval, guards and limits."""
+
+    chunk_words: int
+    chunk_overlap_words: int
+    min_chunk_words: int
+    sheet_rows_per_chunk: int
+    sheet_overlap_rows: int
+    index_dir: Path
+    collection: str
+    models_cache_dir: Path
+    embed_model: str
+    sparse_model: str
+    rerank_model: str
+    guard_model: str
+    generator_model: str
+    prefetch_limit: int
+    rerank_candidates: int
+    context_chunks: int
+    guard_threshold: float
+    evidence_threshold: float
+    max_question_chars: int
+    rate_per_minute: int
+    rate_per_day: int
+
+
+def load_rag_config(path: Path = DEFAULT_RAG_CONFIG_PATH) -> RagConfig:
+    raw = yaml.safe_load(path.read_text())
+    ch, ix, m = raw["chunking"], raw["index"], raw["models"]
+    rt, gd, lm = raw["retrieval"], raw["guardrails"], raw["limits"]
+    return RagConfig(
+        chunk_words=int(ch["chunk_words"]),
+        chunk_overlap_words=int(ch["chunk_overlap_words"]),
+        min_chunk_words=int(ch["min_chunk_words"]),
+        sheet_rows_per_chunk=int(ch["sheet_rows_per_chunk"]),
+        sheet_overlap_rows=int(ch["sheet_overlap_rows"]),
+        index_dir=_resolve(ix["dir"]),
+        collection=ix["collection"],
+        models_cache_dir=_resolve(ix["models_cache_dir"]),
+        embed_model=m["embed"],
+        sparse_model=m["sparse"],
+        rerank_model=m["rerank"],
+        guard_model=m["guard"],
+        generator_model=m["generator"],
+        prefetch_limit=int(rt["prefetch_limit"]),
+        rerank_candidates=int(rt["rerank_candidates"]),
+        context_chunks=int(rt["context_chunks"]),
+        guard_threshold=float(gd["guard_threshold"]),
+        evidence_threshold=float(gd["evidence_threshold"]),
+        max_question_chars=int(lm["max_question_chars"]),
+        rate_per_minute=int(lm["rate_per_minute"]),
+        rate_per_day=int(lm["rate_per_day"]),
+    )
