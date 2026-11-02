@@ -1,0 +1,15 @@
+# Upload only what the static site and the slim API function need.
+pyproject.toml
+uv.lock
+.venv
+.env
+.superpowers
+.deepeval
+.github
+data
+docs
+tests
+eval
+web/node_modules
+web/dist
+**/__pycache__

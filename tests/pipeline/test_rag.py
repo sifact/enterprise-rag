@@ -94,7 +94,7 @@ def test_llm_outage_propagates():
 
 def test_custom_evidence_signal_gates_generation():
     p, gen = pipeline([chunk(1, "some passage", rerank=None)])
-    p.evidence = lambda question, chunks: -10.0
+    p.evidence = lambda question, role, chunks: -10.0
     p.cfg = replace(CFG, evidence_threshold=-7.0)
     r = p.answer("What's the weather?", "hr")
     assert r.refused and r.trace["refusal_reason"] == "no_evidence" and gen.calls == 0

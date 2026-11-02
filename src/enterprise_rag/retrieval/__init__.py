@@ -4,11 +4,12 @@ from enterprise_rag.llm import Usage
 from enterprise_rag.retrieval.types import Pipeline, PipelineResponse, RetrievedChunk
 
 _LAZY = {
+    "CloudRetriever": "enterprise_rag.retrieval.cloud",
     "HybridRetriever": "enterprise_rag.retrieval.hybrid",
     "ReferenceBM25": "enterprise_rag.retrieval.reference_bm25",
 }
 
-__all__ = ["HybridRetriever", "Pipeline", "PipelineResponse", "ReferenceBM25", "RetrievedChunk", "Usage"]
+__all__ = ["CloudRetriever", "HybridRetriever", "Pipeline", "PipelineResponse", "ReferenceBM25", "RetrievedChunk", "Usage"]
 
 
 def __getattr__(name: str):

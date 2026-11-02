@@ -62,7 +62,7 @@ def build_rag(rag: RagConfig, ev: EvalConfig, safety: bool, client=None,
     embedders = embedders or FastEmbedders(rag)
     retriever = build_retriever(RAG_RETRIEVER, rag, safety, client, embedders)
 
-    def evidence(question: str, chunks) -> float:
+    def evidence(question: str, role: str, chunks) -> float:
         """Cross-encoder relevance of the best passage: separated answerable from must-refuse
         dev questions better (AUC 0.82) than dense similarity (0.78)."""
         return max(embedders.rerank(question, [search_text(c.meta["context_header"], c.text)

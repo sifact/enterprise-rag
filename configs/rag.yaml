@@ -36,3 +36,13 @@ limits:
   max_question_chars: 500
   rate_per_minute: 6
   rate_per_day: 100
+
+# Deployed version (Vercel + Qdrant Cloud): embeddings are computed by Qdrant Cloud Inference,
+# so the API runs no local model. URL and key come from QDRANT_URL / QDRANT_API_KEY.
+cloud:
+  collection: chunks_v2_cloud
+  dense_model: sentence-transformers/all-minilm-l6-v2
+  sparse_model: qdrant/bm25
+  mode: hybrid
+  fusion: dbsf               # re-checked on dev for the MiniLM index (Task 12)
+  evidence_threshold: 0.0    # top dense cosine below this refuses; calibrated on dev (Task 12)

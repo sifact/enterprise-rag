@@ -216,6 +216,12 @@ class RagConfig:
     max_question_chars: int
     rate_per_minute: int
     rate_per_day: int
+    cloud_collection: str
+    cloud_dense_model: str
+    cloud_sparse_model: str
+    cloud_mode: str
+    cloud_fusion: str
+    cloud_evidence_threshold: float
 
 
 def load_rag_config(path: Path = DEFAULT_RAG_CONFIG_PATH) -> RagConfig:
@@ -245,4 +251,10 @@ def load_rag_config(path: Path = DEFAULT_RAG_CONFIG_PATH) -> RagConfig:
         max_question_chars=int(lm["max_question_chars"]),
         rate_per_minute=int(lm["rate_per_minute"]),
         rate_per_day=int(lm["rate_per_day"]),
+        cloud_collection=raw["cloud"]["collection"],
+        cloud_dense_model=raw["cloud"]["dense_model"],
+        cloud_sparse_model=raw["cloud"]["sparse_model"],
+        cloud_mode=raw["cloud"]["mode"],
+        cloud_fusion=raw["cloud"]["fusion"],
+        cloud_evidence_threshold=float(raw["cloud"]["evidence_threshold"]),
     )
