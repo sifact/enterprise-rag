@@ -110,18 +110,34 @@ class GroqClient:
         return self._chat(system, user, temperature, json_mode=False, parse=lambda c: c,
                           max_tokens=max_tokens)
 
+    def classify(self, text: str) -> float:
+        """Score text with a classifier model (e.g. Prompt Guard) that replies with a number.
+
+        Classifiers take the bare user text: a system message would be scored along with it.
+        """
+        def parse(content: str) -> float:
+            try:
+                return float(content.strip())
+            except ValueError as exc:
+                raise _Retryable(f"non-numeric classifier reply: {content[:40]!r}") from exc
+
+        return self._chat(None, text, 0.0, json_mode=False, parse=parse, max_tokens=4)[0]
+
     def _chat(self, system, user, temperature, json_mode, parse, max_tokens=None):
         max_tokens = max_tokens or self.max_tokens
+        messages = [{"role": "user", "content": user}]
+        if system is not None:
+            messages.insert(0, {"role": "system", "content": system})
         payload = {
             **self.extra_body,
             "model": self.model,
-            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+            "messages": messages,
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
-        estimate = (len(system) + len(user)) / 4 + max_tokens
+        estimate = (len(system or "") + len(user)) / 4 + max_tokens
 
         last_error = ""
         for attempt in range(MAX_RETRIES + 1):
