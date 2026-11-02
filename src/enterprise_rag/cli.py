@@ -8,6 +8,7 @@
 - `enterprise-rag build-index [--with-fixtures]`: chunk the corpus and build the search index.
 - `enterprise-rag serve [--host] [--port]`: run the web app (API + built UI).
 - `enterprise-rag gate RUN.json...`: exit 1 if any run leaked a document across roles (CI).
+- `enterprise-rag export-web-data`: write deploy/meta.json and deploy/results.json for Vercel.
 """
 
 from __future__ import annotations
@@ -237,6 +238,22 @@ def _serve(args: argparse.Namespace) -> None:
                 forwarded_allow_ips="*")
 
 
+DEPLOY_DIR = PROJECT_ROOT / "deploy"
+
+
+def _export_web_data(args: argparse.Namespace) -> None:
+    """Snapshot what the serverless API shows, so it never reads the corpus or run files."""
+    from enterprise_rag.serving import build_meta, load_results
+
+    data_cfg, ev = load_config(args.config), load_eval_config()
+    meta = build_meta(read_manifest(data_cfg.manifest_path), load_golden(ev.golden_path),
+                      data_cfg.roles)
+    DEPLOY_DIR.mkdir(exist_ok=True)
+    for name, payload in (("meta", meta), ("results", load_results(ev.runs_dir))):
+        (DEPLOY_DIR / f"{name}.json").write_text(json.dumps(payload, indent=2) + "\n")
+        print(f"Wrote {DEPLOY_DIR / name}.json")
+
+
 def _gate(args: argparse.Namespace) -> None:
     """CI gate: a single cross-role leak in any committed run fails the build."""
     failed = []
@@ -301,6 +318,9 @@ def main() -> None:
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))
     serve.set_defaults(func=_serve)
+
+    export = sub.add_parser("export-web-data", help="Write deploy/meta.json and results.json")
+    export.set_defaults(func=_export_web_data)
 
     gate = sub.add_parser("gate", help="Fail (exit 1) if any run file has leak_rate > 0")
     gate.add_argument("runs", type=Path, nargs="+")

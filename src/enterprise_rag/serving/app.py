@@ -27,8 +27,10 @@ def _client_key(request: Request) -> str:
     return forwarded.split(",")[0].strip() or (request.client.host if request.client else "?")
 
 
-def create_app(pipeline, cfg: RagConfig, roles: Sequence[str], meta: dict, runs_dir: Path,
-               static_dir: Path | None = None, secret: str | None = None) -> FastAPI:
+def create_app(pipeline, cfg: RagConfig, roles: Sequence[str], meta: dict,
+               runs_dir: Path | None, static_dir: Path | None = None,
+               secret: str | None = None, results: dict | None = None) -> FastAPI:
+    """`results` is an exported snapshot (serverless deploys); otherwise run files are read."""
     app = FastAPI(title="Enterprise RAG demo", docs_url="/api/docs", openapi_url="/api/openapi.json")
     signer = SessionSigner(roles, secret)
     limiter = RateLimiter(cfg.rate_per_minute, cfg.rate_per_day)
@@ -82,8 +84,11 @@ def create_app(pipeline, cfg: RagConfig, roles: Sequence[str], meta: dict, runs_
         return {**result, "cached": False}
 
     @app.get("/api/results")
-    def results() -> dict:
-        return load_results(runs_dir)
+    def get_results() -> dict:
+        if results is not None:
+            return results
+        return load_results(runs_dir) if runs_dir else {"retrieval": [], "answers": None,
+                                                        "safety": None, "run_dates": []}
 
     if static_dir is not None and (static_dir / "index.html").exists():
         app.mount("/", StaticFiles(directory=static_dir, html=True), name="web")

@@ -155,3 +155,11 @@ def test_responses_never_contain_api_key(make_client, monkeypatch):
     texts = [client.get("/api/meta").text, client.get("/api/results").text,
              client.post("/api/ask", json={"question": "Leave?"}).text]
     assert not any("gsk_secret_value" in t for t in texts)
+
+
+def test_results_can_come_from_an_exported_snapshot(tmp_path):
+    snapshot = {"split": "test", "retrieval": [{"pipeline": "hybrid", "ndcg@10": 0.8}],
+                "answers": None, "safety": None, "run_dates": []}
+    app = create_app(FakePipeline(), RAG, ROLES, META, runs_dir=None, results=snapshot,
+                     secret="s")
+    assert TestClient(app).get("/api/results").json() == snapshot
