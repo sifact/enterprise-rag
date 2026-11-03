@@ -48,11 +48,12 @@ def create_app(pipeline, cfg: RagConfig, roles: Sequence[str], meta: dict,
                                    "per_day": cfg.rate_per_day}}
 
     @app.post("/api/session")
-    def start_session(body: SessionRequest, response: Response) -> dict:
+    def start_session(body: SessionRequest, request: Request, response: Response) -> dict:
         if body.role not in roles:
             raise HTTPException(422, f"Unknown role. Choose one of: {', '.join(roles)}.")
+        behind_https = request.headers.get("x-forwarded-proto", request.url.scheme) == "https"
         response.set_cookie(COOKIE, signer.issue(body.role), max_age=MAX_AGE_S, httponly=True,
-                            samesite="lax")
+                            samesite="lax", secure=behind_https)
         return {"role": body.role}
 
     @app.post("/api/ask")

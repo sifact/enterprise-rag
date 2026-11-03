@@ -180,3 +180,12 @@ def test_titles_are_cleaned_of_source_formatting(make_client):
     assert body["retrieved"][0]["title"] == "Templates & Tools"
     assert body["retrieved"][0]["section"] == "Planning > Quarterly"
     assert body["citations"][0]["title"] == "Templates & Tools"
+
+
+def test_session_cookie_is_secure_over_https_and_http_only(make_client):
+    client = make_client()
+    r = client.post("/api/session", json={"role": "hr"}, headers={"x-forwarded-proto": "https"})
+    cookie = r.headers["set-cookie"].lower()
+    assert "httponly" in cookie and "secure" in cookie and "samesite=lax" in cookie
+    plain = client.post("/api/session", json={"role": "hr"}).headers["set-cookie"].lower()
+    assert "secure" not in plain  # local http development still works
