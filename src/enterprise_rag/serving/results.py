@@ -5,8 +5,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-RETRIEVAL_ORDER = ("reference-bm25", "dense", "bm25-chunks", "hybrid", "hybrid-dbsf",
-                   "hybrid-rerank")
+# The deployed (Qdrant Cloud) search variants, plus the whole-page keyword baseline.
+RETRIEVAL_ORDER = ("reference-bm25", "cloud-dense", "cloud-bm25", "cloud-hybrid",
+                   "cloud-hybrid-dbsf")
+ANSWER_PIPELINE = "rag-cloud"
 RETRIEVAL_KEYS = ("hit@5", "hit@10", "mrr@10", "ndcg@10", "evidence_recall@10", "latency_p95_ms")
 
 
@@ -29,7 +31,8 @@ def load_results(runs_dir: Path) -> dict:
                               RETRIEVAL_KEYS}}
         for name in RETRIEVAL_ORDER if (name, "retrieval") in runs
     ]
-    full, safety = runs.get(("rag", "full")), runs.get(("rag", "safety"))
+    full = runs.get((ANSWER_PIPELINE, "full"))
+    safety = runs.get((ANSWER_PIPELINE, "safety"))
     return {
         "split": "test",
         "retrieval": retrieval,

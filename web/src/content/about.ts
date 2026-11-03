@@ -58,7 +58,7 @@ export const results = {
   answersTitle: "Answer quality",
   searchTitle: "Search quality",
   searchIntro:
-    "We tried five ways of searching, one change at a time, and kept the one that did best on the tuning questions. These are the scores on the held-back questions.",
+    "We tried four ways of searching and kept the one that did best on the tuning questions. These are the scores on the held-back questions.",
   pending: "Results will appear here once the evaluation has run.",
 };
 
@@ -77,23 +77,22 @@ export const metricText: Record<string, { label: string; meaning: string; percen
 
 export const searchLabels: Record<string, string> = {
   "reference-bm25": "Keyword search over whole pages (starting point)",
-  dense: "Meaning search",
-  "bm25-chunks": "Keyword search",
-  hybrid: "Meaning and keywords, merged by rank",
-  "hybrid-dbsf": "Meaning and keywords, merged by score",
-  "hybrid-rerank": "Merged by rank, then reordered by a second model",
+  "cloud-dense": "Meaning search",
+  "cloud-bm25": "Keyword search",
+  "cloud-hybrid": "Meaning and keywords, merged by rank",
+  "cloud-hybrid-dbsf": "Meaning and keywords, merged by score",
 };
-export const SEARCH_USED = "hybrid-dbsf";
+export const SEARCH_USED = "cloud-hybrid";
 
 export const limitations = {
   title: "Limitations",
   items: [
     "The test set is small (43 reported questions), so one question moves a score by two to three points.",
-    "Answers from spreadsheets are the weakest area: the relevance check scores table rows lower than prose.",
+    "Spreadsheet questions are the weakest area: table rows look less similar to a question than prose does, so the relevance check is least certain there.",
+    "The AI-judged answer scores (faithfulness and relevance) haven't been measured on the held-back questions yet: the free tier of the judge model has a daily limit. They will be added to this page when they have been run.",
     "Sign-in is simulated: here you pick a team. A real deployment takes the team from your company sign-in (for example Okta or Microsoft Entra ID).",
     "The demo runs on a free tier of the language model, so it answers a few questions per minute and caches repeated ones.",
     "The documents are a fixed snapshot. Keeping labels in sync when permissions change is part of a real deployment.",
-    "The answer-quality judge is itself an AI model and hasn't yet been checked against human ratings.",
   ],
 };
 
@@ -102,7 +101,7 @@ export const yourData = {
   steps: [
     "Connect your sources (for example SharePoint, Google Drive or Confluence) and copy each document's existing permissions as its labels.",
     "Map your sign-in groups to teams, so each person's access comes from the login they already use.",
-    "Run it in your own cloud account: one container, CPU only, with the language model of your choice.",
+    "Run it in your own cloud account on a standard serverless setup, with the language model of your choice.",
     "Before launch, write test questions from your own documents and run the same evaluation, including the wrong-team and attack questions.",
   ],
 };
@@ -110,10 +109,10 @@ export const yourData = {
 export const stack = {
   title: "Technology",
   items: [
-    ["Search", "Qdrant with meaning vectors (BAAI bge-small) and keyword vectors (BM25), merged by score"],
-    ["Checks", "Llama Prompt Guard 2 plus rules for questions and passages; a small cross-encoder for relevance"],
+    ["Search", "Qdrant Cloud: meaning vectors (all-MiniLM-L6-v2) and keyword vectors (BM25), merged by rank, computed inside Qdrant"],
+    ["Checks", "Llama Prompt Guard 2 plus rules for questions and passages; a similarity threshold for relevance"],
     ["Answers", "Qwen 3.8 27B on Groq, with numbered, delimited sources and citation checks"],
     ["Evaluation", "84 reviewed questions; DeepEval with gpt-oss-120b as the judge"],
-    ["App", "Python, FastAPI, React, TypeScript, Tailwind CSS; one Docker container"],
+    ["App", "Python and FastAPI on Vercel, React, TypeScript and Tailwind CSS; no servers to manage"],
   ] as [string, string][],
 };

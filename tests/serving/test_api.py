@@ -142,10 +142,10 @@ def test_llm_outage_returns_503(make_client):
 
 
 def test_results_endpoint_reads_test_runs_only(make_client, tmp_path):
-    write_run(tmp_path / "runs", "hybrid", "test", "retrieval", {"ndcg@10": 0.9})
-    write_run(tmp_path / "runs", "hybrid", "dev", "retrieval", {"ndcg@10": 0.5})
+    write_run(tmp_path / "runs", "cloud-hybrid", "test", "retrieval", {"ndcg@10": 0.9})
+    write_run(tmp_path / "runs", "cloud-hybrid", "dev", "retrieval", {"ndcg@10": 0.5})
     body = make_client().get("/api/results").json()
-    assert [r["pipeline"] for r in body["retrieval"]] == ["hybrid"]
+    assert [r["pipeline"] for r in body["retrieval"]] == ["cloud-hybrid"]
     assert body["retrieval"][0]["ndcg@10"] == 0.9
 
 
