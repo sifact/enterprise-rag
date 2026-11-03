@@ -2,11 +2,20 @@
 
 from __future__ import annotations
 
+import html
+import re
+
 from pydantic import BaseModel, ConfigDict
 
 from enterprise_rag.retrieval.types import PipelineResponse
 
 SNIPPET_CHARS = 700
+_ANCHOR = re.compile(r"\s*\{#[^}]*\}")  # Hugo heading ids such as "{#strategy-planning}"
+
+
+def clean_label(text: str | None) -> str | None:
+    """Titles and section names as a reader should see them: no HTML entities or heading ids."""
+    return None if text is None else _ANCHOR.sub("", html.unescape(text)).strip()
 
 
 class SessionRequest(BaseModel):
@@ -35,11 +44,13 @@ def ask_response(resp: PipelineResponse, role: str, question: str) -> dict:
         c = by_id.get(cid)
         meta = c.meta if c else {}
         citations.append({"n": number(cid, i), "chunk_id": cid, "doc_id": c.doc_id if c else "",
-                          "title": meta.get("title"), "section": meta.get("section"),
+                          "title": clean_label(meta.get("title")),
+                          "section": clean_label(meta.get("section")),
                           "page": meta.get("page"), "source_url": meta.get("source_url"),
                           "snippet": (c.text[:SNIPPET_CHARS] if c else "")})
-    retrieved = [{"chunk_id": c.chunk_id, "doc_id": c.doc_id, "title": c.meta.get("title"),
-                  "section": c.meta.get("section"), "page": c.meta.get("page"),
+    retrieved = [{"chunk_id": c.chunk_id, "doc_id": c.doc_id,
+                  "title": clean_label(c.meta.get("title")),
+                  "section": clean_label(c.meta.get("section")), "page": c.meta.get("page"),
                   "allowed_roles": c.meta.get("allowed_roles") or [],
                   "score": round(c.score, 4),
                   "rerank_score": None if c.rerank_score is None else round(c.rerank_score, 3),

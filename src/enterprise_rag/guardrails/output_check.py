@@ -22,4 +22,9 @@ def check_citations(generated: Generated, n_sources: int) -> Generated:
                        generated.answer)
     if not valid:
         return replace(generated, answer="", citations=(), refused=True, reason="no_support")
-    return replace(generated, answer=text.strip(), citations=valid)
+    text = text.strip()
+    if not _MARKER.search(text):
+        # The model listed its sources but didn't mark them in the text; mark them so every
+        # answer shows which sources it rests on.
+        text += " " + "".join(f"[{c}]" for c in valid)
+    return replace(generated, answer=text, citations=valid)

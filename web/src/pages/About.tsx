@@ -229,7 +229,6 @@ export default function About() {
                   "answer_relevancy",
                   "citation_precision",
                   "false_refusal_rate",
-                  "latency_p50_ms",
                 ]}
               />
               <SearchTable rows={results.retrieval} />

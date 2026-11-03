@@ -163,3 +163,20 @@ def test_results_can_come_from_an_exported_snapshot(tmp_path):
     app = create_app(FakePipeline(), RAG, ROLES, META, runs_dir=None, results=snapshot,
                      secret="s")
     assert TestClient(app).get("/api/results").json() == snapshot
+
+
+def test_titles_are_cleaned_of_source_formatting(make_client):
+    class Messy(FakePipeline):
+        def answer(self, question, role):
+            r = super().answer(question, role)
+            c = r.retrieved[0]
+            messy = RetrievedChunk(c.doc_id, c.chunk_id, c.text, c.score, None,
+                                   {**c.meta, "title": "Templates &amp; Tools",
+                                    "section": "Planning {#planning} > Quarterly {#q}",
+                                    "allowed_roles": ["c_level", role]})
+            return PipelineResponse(r.text, r.refused, r.citations, (messy,), r.usage, r.trace)
+
+    body = signed_in(make_client(Messy())).post("/api/ask", json={"question": "Plan?"}).json()
+    assert body["retrieved"][0]["title"] == "Templates & Tools"
+    assert body["retrieved"][0]["section"] == "Planning > Quarterly"
+    assert body["citations"][0]["title"] == "Templates & Tools"

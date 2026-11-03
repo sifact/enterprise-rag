@@ -71,8 +71,7 @@ export const metricText: Record<string, { label: string; meaning: string; percen
   answer_relevancy: { label: "Relevance", meaning: "How directly answers address the question asked, scored by the judge.", percent: true },
   citation_precision: { label: "Citations that hold up", meaning: "Cited passages the judge confirmed actually support the answer.", percent: true },
   false_refusal_rate: { label: "Wrongly refused", meaning: "Answerable questions it declined to answer.", percent: true, lowerIsBetter: true },
-  latency_p50_ms: { label: "Typical answer time", meaning: "Half of the answers took this long or less." },
-  latency_p95_ms: { label: "Slow answer time", meaning: "95% of answers took this long or less." },
+  latency_p95_ms: { label: "Slowest 5%", meaning: "95% of searches took this long or less." },
 };
 
 export const searchLabels: Record<string, string> = {
@@ -91,7 +90,7 @@ export const limitations = {
     "Spreadsheet questions are the weakest area: table rows look less similar to a question than prose does, so the relevance check is least certain there.",
     "The AI-judged answer scores (faithfulness and relevance) haven't been measured on the held-back questions yet: the free tier of the judge model has a daily limit. They will be added to this page when they have been run.",
     "Sign-in is simulated: here you pick a team. A real deployment takes the team from your company sign-in (for example Okta or Microsoft Entra ID).",
-    "The demo runs on a free tier of the language model, so it answers a few questions per minute and caches repeated ones.",
+    "A single question on the live demo takes about one to two seconds. The language model runs on a free tier that allows only a few questions a minute across all visitors, so when it is busy an answer waits or asks you to try again; repeated questions are answered from a cache.",
     "The documents are a fixed snapshot. Keeping labels in sync when permissions change is part of a real deployment.",
   ],
 };

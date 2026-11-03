@@ -26,7 +26,7 @@ export default function QuestionBox(props: {
       <p className="mb-3 text-muted">
         You'll only get answers from documents {teamLabel} is allowed to read.
       </p>
-      <div className="rounded-md border border-rule bg-panel focus-within:border-focus">
+      <div className="rounded-md border border-rule bg-panel focus-within:border-focus focus-within:ring-2 focus-within:ring-focus/40">
         <textarea
           id={id}
           value={value}

@@ -111,3 +111,14 @@ def test_questions_always_go_to_the_classifier():
     guard = InjectionGuard(scorer=lambda t: calls.append(t) or 0.0, threshold=0.9)
     guard.check("How long is parental leave?", kind="question")
     assert calls == ["How long is parental leave?"]
+
+
+def test_markers_added_when_the_model_lists_sources_but_writes_none():
+    g = Generated("Revenue was $955.2 million.", (1, 3), False, "", None)
+    out = check_citations(g, n_sources=5)
+    assert out.answer == "Revenue was $955.2 million. [1][3]" and out.citations == (1, 3)
+
+
+def test_existing_markers_are_left_alone():
+    g = Generated("Revenue was $955.2 million [1].", (1,), False, "", None)
+    assert check_citations(g, n_sources=5).answer == "Revenue was $955.2 million [1]."
