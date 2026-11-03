@@ -1,32 +1,119 @@
-# Enterprise RAG with RBAC, Guardrails, Evals and CI
+# Enterprise RAG: answers that respect who can see what
 
 **Live demo:** https://enterprise-rag-puce.vercel.app
 
-An internal company chatbot over handbook pages, SEC filings and spreadsheets. Each user only retrieves documents their role is allowed to see, and the eval suite proves it.
+An internal company assistant that answers questions from handbook pages, SEC filings and finance spreadsheets, and only from documents the asker's team is allowed to read. Every answer cites its sources, off-limits questions are refused with a reason, and a reviewed test set measures all of it.
+
+![Finance asks about revenue and gets a cited answer](docs/screenshots/playground-answer-dark.png)
+
+| Marketing asks the same question (light theme) | On a phone |
+|---|---|
+| ![Marketing is refused because its documents don't contain the answer](docs/screenshots/playground-refusal-light.png) | ![Phone layout](docs/screenshots/playground-phone-dark.png) |
+
+## What it does
+
+- **Access follows the team.** Every document carries the list of teams that may read it, and a question only searches passages labelled with the asker's team. Other teams' documents are never searched, so they can't leak into an answer.
+- **Answers show their work.** Each answer has numbered citations with page numbers and links to the original. A "How it answered" panel lists each check, the passages searched with scores, and which teams may read each one.
+- **It refuses instead of guessing.** A relevance check stops questions the team's documents can't answer, and an answer without a valid citation is withheld.
+- **It resists tricks.** Questions that override instructions or claim another role are blocked, and instructions planted inside documents are cut out before the model sees them.
+- **Light and dark themes**, a Playground tab to try it and an About tab that explains the project for non-technical readers.
+
+## Results
+
+Measured on the **43 held-back test questions** (the other 41 were used for tuning). Every number comes from a run file in [eval/runs/](eval/runs/).
+
+| Safety | Result |
+|---|---|
+| Documents leaked across teams | **0%** |
+| Must-refuse questions refused (wrong team, off-topic, attacks) | **100%** |
+| Attacks stopped, including a planted instruction in a page | **100%** |
+
+| Answer quality | Result |
+|---|---|
+| Finance figures exactly right (within 0.5%) | 70% |
+| Answerable questions wrongly refused | 10% (3 of 29, all finance spreadsheet or cross-source questions) |
+| Faithfulness and relevance (AI judge) | not measured yet: the judge model's free daily token limit was used up |
+
+Search quality, one change at a time (the hybrid row is what the live site uses):
+
+| Search method | Found in top 5 | MRR@10 | nDCG@10 | Evidence recall@10 |
+|---|---|---|---|---|
+| Keyword search over whole pages (starting point) | 0.828 | 0.810 | 0.823 | 0.862 |
+| Meaning search (MiniLM) | 0.690 | 0.653 | 0.703 | 0.810 |
+| Keyword search (BM25) | 0.897 | 0.736 | 0.773 | 0.879 |
+| **Hybrid, merged by rank (RRF)** | **0.931** | 0.721 | 0.773 | 0.914 |
+| Hybrid, merged by score (DBSF) | 0.931 | 0.772 | 0.811 | 0.914 |
+
+Two honest notes. Hybrid RRF won on the tuning questions (nDCG 0.867 against 0.844 for DBSF); on the test questions DBSF is ahead, which is within the noise of 29 questions. And the whole-page keyword baseline ranks well because a whole page easily contains the quoted evidence, while chunked search has to find the right passage; the chunked search is what makes cited, passage-level answers possible.
+
+A single question on the live demo takes about one to two seconds. The answer model runs on a free tier that allows only a few questions a minute across all visitors, so a busy demo may ask you to try again.
 
 ## How it works
 
-1. **Label.** Every document gets the list of teams allowed to read it ([manifest](docs/rbac-implementation.excalidraw)); chunks copy that list.
-2. **Filter, then search.** A question searches only passages labelled with the asker's team. Hybrid search merges meaning (MiniLM) and keyword (BM25) results by rank.
-3. **Check.** A relevance threshold stops questions the team's documents can't answer; an injection classifier and rules screen the question and any passage that addresses the assistant; planted instruction sentences are cut out of passages.
+1. **Label.** Every document gets the list of teams allowed to read it (the [manifest](docs/rbac-implementation.excalidraw)); chunks copy that list.
+2. **Filter, then search.** A question searches only passages labelled with the asker's team. Hybrid search merges meaning (MiniLM) and keyword (BM25) results by rank, computed inside Qdrant Cloud.
+3. **Check.** A relevance threshold stops questions the team's documents can't answer. An injection classifier and rules screen the question and any passage that addresses the assistant, and planted instruction sentences are cut out of passages.
 4. **Answer with citations.** Qwen 3.8 27B writes a short answer from numbered sources; an answer without a valid citation is withheld.
 
-Diagrams: [system design](docs/system-design.excalidraw), [RBAC in RAG](docs/rbac-in-rag.excalidraw), [how RBAC is implemented here](docs/rbac-implementation.excalidraw).
+Diagrams: [system design](docs/system-design.excalidraw), [RBAC in RAG](docs/rbac-in-rag.excalidraw), [how RBAC is implemented here](docs/rbac-implementation.excalidraw) (open them in VS Code with the Excalidraw extension).
+
+## Tech stack
+
+| Part | Choice |
+|---|---|
+| Search | Qdrant Cloud: `all-MiniLM-L6-v2` dense vectors and BM25 sparse vectors, embedded server-side, merged with RRF. A local embedded Qdrant plus `bge-small` is the offline alternative. |
+| Answers | `qwen/qwen3.8-27b` on Groq, numbered and delimited sources, JSON reply with citations |
+| Guards | `llama-prompt-guard-2-86m` plus regex rules for questions and passages; relevance threshold on dense similarity |
+| Evaluation | 84 reviewed questions, deterministic retrieval, numeric and safety metrics, DeepEval with `gpt-oss-120b` as the judge |
+| Backend | Python 3.13, FastAPI, signed session cookies, per-visitor rate limits, answer cache |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, IBM Plex Sans |
+| Hosting | Vercel (static site plus one Python function) and Qdrant Cloud free cluster |
 
 ## Run it
 
-Two ways to run the same app:
-
-- **Deployed (Vercel + Qdrant Cloud):** the API is a small serverless function; Qdrant Cloud stores the index and computes the embeddings, so no model runs locally. Needs `QDRANT_URL`, `QDRANT_API_KEY`, `GROQ_API_KEY` and `SESSION_SECRET` as environment variables. Build the cloud index once with `uv run enterprise-rag build-cloud-index`, export the page data with `uv run enterprise-rag export-web-data`, then `vercel deploy --prod`.
-- **Fully local (no Qdrant account):** embedded Qdrant plus local models.
+**Locally, with no accounts except Groq** (embedded Qdrant and local models):
 
 ```bash
-make setup      # install, fetch the corpus (needs SEC_USER_AGENT), build the local index
+make setup                      # install, fetch the corpus, build the local index (see "Building the corpus")
 echo "GROQ_API_KEY=..." > .env
-make run        # builds the web app and serves http://127.0.0.1:8000
+make run                        # builds the web app and serves http://127.0.0.1:8000
 ```
 
-Other commands: `make test` (lint and tests), `make gate` (fails if any committed run leaked a document across teams).
+**Deployed, as the live demo runs** (Vercel and Qdrant Cloud):
+
+| Variable | What it is |
+|---|---|
+| `GROQ_API_KEY` | Groq API key for the answer model and the injection classifier |
+| `QDRANT_URL`, `QDRANT_API_KEY` | Qdrant Cloud cluster URL and a cluster API key |
+| `SESSION_SECRET` | Random string that signs the demo sessions |
+
+```bash
+uv run enterprise-rag build-cloud-index   # upload the chunks; Qdrant computes the embeddings
+uv run enterprise-rag export-web-data     # write deploy/meta.json and deploy/results.json
+vercel deploy --prod
+```
+
+Other commands: `make test` (lint and tests), `make gate` (fails if any committed run leaked a document across teams), `uv run enterprise-rag --help`.
+
+## Project layout
+
+```
+src/enterprise_rag/
+  data/         corpus download, manifest with allowed_roles, document text
+  indexing/     chunking, local and Qdrant Cloud index builders, embedders
+  retrieval/    local and cloud hybrid retrievers, BM25 reference
+  guardrails/   injection checks, passage cleaning, citation checks
+  generation/   answer prompt and Groq answer model
+  pipeline/     the answer pipeline and named variants for evaluation
+  evaluation/   golden set, metrics, harness, run files, reports
+  serving/      FastAPI app, sessions, limits, results
+web/            React app (Playground and About)
+eval/           golden set v1, poisoned test pages, committed run files
+configs/        corpus, evaluation and pipeline settings
+index.py        Vercel entry point
+```
+
+Each core module has a short guide in a `guide/` folder next to it.
 
 ## Data
 
@@ -90,18 +177,20 @@ The golden set is frozen at [eval/golden/v1.jsonl](eval/golden/v1.jsonl): 84 que
 Gold labels are verbatim quotes, not chunk IDs, so any chunking setup is scored against the same file. How each draft was reviewed is recorded in [eval/golden/review/v1_review.md](eval/golden/review/v1_review.md).
 
 ```bash
-uv run enterprise-rag eval --pipeline reference-bm25 --split test --retrieval-only
-uv run enterprise-rag eval --pipeline reference-bm25 --split test --safety-only
-uv run enterprise-rag report eval/runs/*.json
+uv run enterprise-rag eval --pipeline rag --split test --no-judge     # answers (local index)
+uv run enterprise-rag eval --pipeline rag-cloud --split test --safety-only
+uv run enterprise-rag report eval/runs/*test*.json                    # results table
 ```
 
-**Reference retriever smoke test, not a pipeline result.** The BM25 reference retriever searches whole pages with the role filter applied first. It only exists to check the harness end to end: it never writes answers, so every answer is a refusal.
+Retrieval choices were made on `dev` only; the numbers above are `test`. Changing the golden set later means a new version (`v2`), never an edit in place.
 
-| Run | hit@5 | MRR@10 | nDCG@10 | Evidence recall@10 | Leak rate |
-|---|---|---|---|---|---|
-| BM25 over whole pages, test split | 0.828 | 0.810 | 0.823 | 0.862 | 0.000 |
+## Limitations
 
-On the 12 test items that must be refused it refused all of them (refusal accuracy 1.000), blocked all 5 direct injections and leaked nothing. Its false-refusal rate is 1.000 because it also "refuses" the 2 indirect-injection test questions, which should be answered.
+- The test set is small (43 questions), so one question moves a score by two to three points.
+- Spreadsheet questions are the weakest area: table rows look less similar to a question than prose does.
+- Sign-in is simulated by picking a team. A real deployment takes the team from the company sign-in (for example Okta or Microsoft Entra ID) and keeps labels in sync when permissions change.
+- The AI-judged answer scores haven't been measured on the test split yet, and the judge hasn't been compared with human ratings.
+- The documents are a fixed snapshot of public data; the role boundaries are ones this demo enforces, not real confidentiality.
 
 ## Attribution and licenses
 
