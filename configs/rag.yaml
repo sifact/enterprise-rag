@@ -44,5 +44,7 @@ cloud:
   dense_model: sentence-transformers/all-minilm-l6-v2
   sparse_model: qdrant/bm25
   mode: hybrid
-  fusion: dbsf               # re-checked on dev for the MiniLM index (Task 12)
-  evidence_threshold: 0.0    # top dense cosine below this refuses; calibrated on dev (Task 12)
+  fusion: rrf                # dev nDCG@10: rrf 0.867 > dbsf 0.844 > bm25 0.860 > dense 0.713
+  # Top MiniLM cosine below this refuses before the answer model is called. Dev split:
+  # 1/29 answerable questions refused (3%), 4/9 must-refuse questions stopped early.
+  evidence_threshold: 0.43
