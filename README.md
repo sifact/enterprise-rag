@@ -1,5 +1,7 @@
 # Enterprise RAG with RBAC, Guardrails, Evals and CI
 
+**Live demo:** https://enterprise-rag-puce.vercel.app
+
 An internal company chatbot over handbook pages, SEC filings and spreadsheets. Each user only retrieves documents their role is allowed to see, and the eval suite proves it.
 
 ## How it works
