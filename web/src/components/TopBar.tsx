@@ -17,10 +17,10 @@ export default function TopBar(props: { route: Route; theme: Theme; onToggleThem
       >
         Skip to content
       </a>
-      <div className="mx-auto flex h-14 max-w-[1240px] items-center gap-6 px-4 sm:px-6">
-        <a href="#/playground" className="flex items-center gap-2.5 font-cond text-[19px] font-semibold tracking-tight">
+      <div className="mx-auto flex h-14 max-w-[1240px] items-center gap-3 px-4 sm:gap-6 sm:px-6">
+        <a href="#/playground" className="flex items-center gap-2.5 whitespace-nowrap font-cond text-[19px] font-semibold tracking-tight" aria-label="Enterprise RAG">
           <Mark />
-          <span>Enterprise RAG</span>
+          <span className="hidden sm:inline">Enterprise RAG</span>
         </a>
         <nav aria-label="Sections" className="flex h-full items-stretch gap-1">
           {TABS.map((t) => {

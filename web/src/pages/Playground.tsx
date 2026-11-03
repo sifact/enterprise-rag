@@ -29,6 +29,7 @@ export default function Playground() {
   const [meta, setMeta] = useState<Meta | null>(null);
   const [metaError, setMetaError] = useState<string | null>(null);
   const [role, setRole] = useState<string>(savedRole);
+  const [signedIn, setSignedIn] = useState(false);
   const [question, setQuestion] = useState("");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [progress, setProgress] = useState(0);
@@ -43,6 +44,7 @@ export default function Playground() {
         setRole(r);
         return api.signIn(r);
       })
+      .then(() => setSignedIn(true))
       .catch((e: ApiError) => setMetaError(e.message));
   }, []);
 
@@ -97,7 +99,7 @@ export default function Playground() {
   }
 
   return (
-    <div className="mx-auto grid max-w-[1240px] gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)] lg:py-10">
+    <div className="mx-auto grid max-w-[1240px] grid-cols-1 gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[250px_minmax(0,1fr)] lg:py-10">
       <aside className="lg:sticky lg:top-20 lg:self-start">
         {meta ? (
           <RoleSwitcher
@@ -124,7 +126,7 @@ export default function Playground() {
           onChange={setQuestion}
           onSubmit={() => void ask(question.trim())}
           max={meta?.limits.max_question_chars ?? 500}
-          busy={status.kind === "loading"}
+          busy={status.kind === "loading" || !signedIn}
           teamLabel={shortLabel(role)}
         />
 
@@ -158,7 +160,7 @@ export default function Playground() {
           )}
 
           {status.kind === "done" && meta && (
-            <div className="grid gap-10 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+            <div className="grid grid-cols-1 gap-10 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
               <AnswerView answer={status.answer} roles={meta.roles} onAskAs={(r) => void ask(status.answer.question, r)} />
               <HowItAnswered answer={status.answer} />
             </div>

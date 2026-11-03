@@ -102,7 +102,7 @@ export default function About() {
   }, []);
 
   return (
-    <div className="mx-auto grid max-w-[1240px] gap-10 px-4 py-10 sm:px-6 xl:grid-cols-[200px_minmax(0,1fr)]">
+    <div className="mx-auto grid max-w-[1240px] grid-cols-1 gap-10 px-4 py-10 sm:px-6 xl:grid-cols-[200px_minmax(0,1fr)]">
       <nav aria-label="On this page" className="hidden xl:block">
         <ul className="sticky top-24 space-y-1.5 text-[14px]">
           {SECTIONS.map(([id, title]) => (
