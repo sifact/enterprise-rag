@@ -2,6 +2,30 @@
 
 An internal company chatbot over handbook pages, SEC filings and spreadsheets. Each user only retrieves documents their role is allowed to see, and the eval suite proves it.
 
+## How it works
+
+1. **Label.** Every document gets the list of teams allowed to read it ([manifest](docs/rbac-implementation.excalidraw)); chunks copy that list.
+2. **Filter, then search.** A question searches only passages labelled with the asker's team. Hybrid search merges meaning (MiniLM) and keyword (BM25) results by rank.
+3. **Check.** A relevance threshold stops questions the team's documents can't answer; an injection classifier and rules screen the question and any passage that addresses the assistant; planted instruction sentences are cut out of passages.
+4. **Answer with citations.** Qwen 3.8 27B writes a short answer from numbered sources; an answer without a valid citation is withheld.
+
+Diagrams: [system design](docs/system-design.excalidraw), [RBAC in RAG](docs/rbac-in-rag.excalidraw), [how RBAC is implemented here](docs/rbac-implementation.excalidraw).
+
+## Run it
+
+Two ways to run the same app:
+
+- **Deployed (Vercel + Qdrant Cloud):** the API is a small serverless function; Qdrant Cloud stores the index and computes the embeddings, so no model runs locally. Needs `QDRANT_URL`, `QDRANT_API_KEY`, `GROQ_API_KEY` and `SESSION_SECRET` as environment variables. Build the cloud index once with `uv run enterprise-rag build-cloud-index`, export the page data with `uv run enterprise-rag export-web-data`, then `vercel deploy --prod`.
+- **Fully local (no Qdrant account):** embedded Qdrant plus local models.
+
+```bash
+make setup      # install, fetch the corpus (needs SEC_USER_AGENT), build the local index
+echo "GROQ_API_KEY=..." > .env
+make run        # builds the web app and serves http://127.0.0.1:8000
+```
+
+Other commands: `make test` (lint and tests), `make gate` (fails if any committed run leaked a document across teams).
+
 ## Data
 
 There's no private company dataset, so the "company" is **GitLab**, which publishes its internal handbook and files public financial reports. The full corpus definition, with pinned versions, is in [configs/data_sources.yaml](configs/data_sources.yaml).
