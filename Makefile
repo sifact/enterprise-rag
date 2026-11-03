@@ -23,4 +23,4 @@ test:           ## lint and unit tests
 	uv run pytest -q
 
 gate:           ## CI leak gate over the committed test runs
-	uv run enterprise-rag gate eval/runs/*-rag-test-safety.json eval/runs/*-test-retrieval.json
+	uv run enterprise-rag gate eval/runs/*-test*.json

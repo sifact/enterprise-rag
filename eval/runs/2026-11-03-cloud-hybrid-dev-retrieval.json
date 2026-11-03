@@ -1,0 +1,2924 @@
+{
+  "pipeline_name": "cloud-hybrid",
+  "golden_version": "v1",
+  "split": "dev",
+  "mode": "retrieval",
+  "started_at": "2026-11-03T18:00:29+00:00",
+  "config": {
+    "top_k": 10,
+    "quote_match_threshold": 0.8,
+    "numeric_tolerance": 0.005,
+    "judge_model": null,
+    "generator_model": null
+  },
+  "items": [
+    {
+      "id": "eng-fact-001",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "engineering",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:engineering/data-engineering/database-excellence/database-operations/_index",
+          "chunk_id": "handbook:engineering/data-engineering/database-excellence/database-operations/_index#c0003",
+          "score": 0.7
+        },
+        {
+          "doc_id": "handbook:engineering/devops/create/code-review/_index",
+          "chunk_id": "handbook:engineering/devops/create/code-review/_index#c0011",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:engineering/workflow/developer-onboarding",
+          "chunk_id": "handbook:engineering/workflow/developer-onboarding#c0000",
+          "score": 0.45
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/composition_analysis_analyzers_metrics/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/composition_analysis_analyzers_metrics/_index#c0000",
+          "score": 0.4333
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/capacity-planning",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/capacity-planning#c0014",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/guide/design",
+          "chunk_id": "handbook:company/culture/all-remote/guide/design#c0002",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/gitlab-delivery/delivery/metrics",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/gitlab-delivery/delivery/metrics#c0000",
+          "score": 0.1984
+        },
+        {
+          "doc_id": "handbook:engineering/devops/create/code-review/_index",
+          "chunk_id": "handbook:engineering/devops/create/code-review/_index#c0010",
+          "score": 0.1825
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/composition_analysis_analyzers_metrics/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/composition_analysis_analyzers_metrics/_index#c0003",
+          "score": 0.1769
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/epss/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/epss/_index#c0006",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 965.5,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "hr-fact-001",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "hr",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0007",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0005",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0008",
+          "score": 0.5333
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0009",
+          "score": 0.2778
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0001",
+          "score": 0.2763
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0016",
+          "score": 0.2667
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0026",
+          "score": 0.2083
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0017",
+          "score": 0.2054
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0023",
+          "score": 0.1955
+        },
+        {
+          "doc_id": "handbook:total-rewards/stock-options",
+          "chunk_id": "handbook:total-rewards/stock-options#c0022",
+          "score": 0.1776
+        }
+      ],
+      "refused": null,
+      "latency_ms": 378.2,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "mkt-fact-001",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "marketing",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0010",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0011",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0012",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0024",
+          "score": 0.4
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0023",
+          "score": 0.2917
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0005",
+          "score": 0.2333
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0015",
+          "score": 0.1917
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0017",
+          "score": 0.1905
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0004",
+          "score": 0.1769
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/usergems",
+          "chunk_id": "handbook:marketing/marketing-operations/usergems#c0007",
+          "score": 0.1566
+        }
+      ],
+      "refused": null,
+      "latency_ms": 380.6,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "mkt-fact-004",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "marketing",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:marketing/growth-marketing/digital-agency/agency",
+          "chunk_id": "handbook:marketing/growth-marketing/digital-agency/agency#c0018",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/email-management/operational-email-sends",
+          "chunk_id": "handbook:marketing/marketing-operations/email-management/operational-email-sends#c0000",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:marketing/product-and-technical-marketing/product-and-solution-marketing/enablement/dotcom-subscriptions",
+          "chunk_id": "handbook:marketing/product-and-technical-marketing/product-and-solution-marketing/enablement/dotcom-subscriptions#c0005",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:marketing/growth-marketing/digital-agency/agency",
+          "chunk_id": "handbook:marketing/growth-marketing/digital-agency/agency#c0006",
+          "score": 0.2803
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0009",
+          "score": 0.2794
+        },
+        {
+          "doc_id": "handbook:marketing/growth-marketing/digital-agency/agency",
+          "chunk_id": "handbook:marketing/growth-marketing/digital-agency/agency#c0000",
+          "score": 0.2576
+        },
+        {
+          "doc_id": "handbook:marketing/growth-marketing/digital-agency/agency",
+          "chunk_id": "handbook:marketing/growth-marketing/digital-agency/agency#c0013",
+          "score": 0.2143
+        },
+        {
+          "doc_id": "handbook:marketing/product-and-technical-marketing/content/editorial-team",
+          "chunk_id": "handbook:marketing/product-and-technical-marketing/content/editorial-team#c0007",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/working-groups/ecommerce",
+          "chunk_id": "handbook:company/working-groups/ecommerce#c0003",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:marketing/growth-marketing/digital-agency/agency",
+          "chunk_id": "handbook:marketing/growth-marketing/digital-agency/agency#c0007",
+          "score": 0.1706
+        }
+      ],
+      "refused": null,
+      "latency_ms": 381.8,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "legal-fact-002",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "legal",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:legal/process-for-ux-research-prize-draws/index",
+          "chunk_id": "handbook:legal/process-for-ux-research-prize-draws/index#c0006",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:legal/promotional-game-standard-rules",
+          "chunk_id": "handbook:legal/promotional-game-standard-rules#c0000",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "handbook:legal/promotional-game-standard-rules",
+          "chunk_id": "handbook:legal/promotional-game-standard-rules#c0001",
+          "score": 0.4167
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0009",
+          "score": 0.3833
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0010",
+          "score": 0.325
+        },
+        {
+          "doc_id": "handbook:legal/promotional-game-standard-rules",
+          "chunk_id": "handbook:legal/promotional-game-standard-rules#c0003",
+          "score": 0.3111
+        },
+        {
+          "doc_id": "handbook:legal/promotional-game-standard-rules",
+          "chunk_id": "handbook:legal/promotional-game-standard-rules#c0004",
+          "score": 0.3095
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0000",
+          "score": 0.2159
+        },
+        {
+          "doc_id": "handbook:legal/promotional-game-standard-rules",
+          "chunk_id": "handbook:legal/promotional-game-standard-rules#c0002",
+          "score": 0.202
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0005",
+          "score": 0.1833
+        }
+      ],
+      "refused": null,
+      "latency_ms": 375.9,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "legal-fact-003",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "legal",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "ndcg@10": 0.5,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms-v4",
+          "chunk_id": "handbook:legal/ai-functionality-terms-v4#c0003",
+          "score": 0.75
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms-v4",
+          "chunk_id": "handbook:legal/ai-functionality-terms-v4#c0004",
+          "score": 0.5909
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms",
+          "chunk_id": "handbook:legal/ai-functionality-terms#c0003",
+          "score": 0.5333
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms",
+          "chunk_id": "handbook:legal/ai-functionality-terms#c0004",
+          "score": 0.4167
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms-v2",
+          "chunk_id": "handbook:legal/ai-functionality-terms-v2#c0002",
+          "score": 0.3929
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms-v4",
+          "chunk_id": "handbook:legal/ai-functionality-terms-v4#c0005",
+          "score": 0.2917
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms-v2",
+          "chunk_id": "handbook:legal/ai-functionality-terms-v2#c0003",
+          "score": 0.2778
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms-v4",
+          "chunk_id": "handbook:legal/ai-functionality-terms-v4#c0001",
+          "score": 0.2667
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms",
+          "chunk_id": "handbook:legal/ai-functionality-terms#c0005",
+          "score": 0.2429
+        },
+        {
+          "doc_id": "handbook:legal/ai-functionality-terms-v2",
+          "chunk_id": "handbook:legal/ai-functionality-terms-v2#c0004",
+          "score": 0.2361
+        }
+      ],
+      "refused": null,
+      "latency_ms": 381.8,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "legal-fact-004",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "legal",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.5,
+        "ndcg@10": 0.6309297535714575,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:legal/reseller-agreement",
+          "chunk_id": "handbook:legal/reseller-agreement#c0034",
+          "score": 0.5588
+        },
+        {
+          "doc_id": "handbook:legal/reseller-agreement",
+          "chunk_id": "handbook:legal/reseller-agreement#c0032",
+          "score": 0.54
+        },
+        {
+          "doc_id": "handbook:legal/legacy/legacy-reseller-agreement-v1",
+          "chunk_id": "handbook:legal/legacy/legacy-reseller-agreement-v1#c0034",
+          "score": 0.3889
+        },
+        {
+          "doc_id": "handbook:legal/reseller-agreement",
+          "chunk_id": "handbook:legal/reseller-agreement#c0033",
+          "score": 0.375
+        },
+        {
+          "doc_id": "handbook:legal/legacy/legacy-reseller-agreement-v1",
+          "chunk_id": "handbook:legal/legacy/legacy-reseller-agreement-v1#c0032",
+          "score": 0.3646
+        },
+        {
+          "doc_id": "handbook:legal/legacy/legacy-reseller-agreement-v1",
+          "chunk_id": "handbook:legal/legacy/legacy-reseller-agreement-v1#c0031",
+          "score": 0.3095
+        },
+        {
+          "doc_id": "handbook:legal/legacy/legacy-reseller-agreement-v1",
+          "chunk_id": "handbook:legal/legacy/legacy-reseller-agreement-v1#c0030",
+          "score": 0.3056
+        },
+        {
+          "doc_id": "handbook:legal/legacy/legacy-subscription-agreement-v4",
+          "chunk_id": "handbook:legal/legacy/legacy-subscription-agreement-v4#c0015",
+          "score": 0.3
+        },
+        {
+          "doc_id": "handbook:legal/reseller-agreement",
+          "chunk_id": "handbook:legal/reseller-agreement#c0031",
+          "score": 0.2917
+        },
+        {
+          "doc_id": "handbook:legal/legacy/legacy-reseller-agreement-v1",
+          "chunk_id": "handbook:legal/legacy/legacy-reseller-agreement-v1#c0033",
+          "score": 0.254
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.6,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "sales-fact-001",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "sales",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:sales/field-operations/_index",
+          "chunk_id": "handbook:sales/field-operations/_index#c0002",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/_index",
+          "chunk_id": "handbook:sales/field-operations/_index#c0003",
+          "score": 0.6667
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/_index",
+          "chunk_id": "handbook:sales/field-operations/_index#c0001",
+          "score": 0.3429
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/sales-systems/gtm-technical-documentation/sfdc-booking-metric-fields",
+          "chunk_id": "handbook:sales/field-operations/sales-systems/gtm-technical-documentation/sfdc-booking-metric-fields#c0001",
+          "score": 0.325
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/sales-operations/order-management",
+          "chunk_id": "handbook:sales/field-operations/sales-operations/order-management#c0003",
+          "score": 0.2955
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/customer-success-operations/_index",
+          "chunk_id": "handbook:sales/field-operations/customer-success-operations/_index#c0006",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/sales-systems/gtm-technical-documentation/sfdc-booking-metric-fields",
+          "chunk_id": "handbook:sales/field-operations/sales-systems/gtm-technical-documentation/sfdc-booking-metric-fields#c0002",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:sales/training/sales-enablement-sessions/_index",
+          "chunk_id": "handbook:sales/training/sales-enablement-sessions/_index#c0019",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:sales/training/sales-enablement-sessions/_index",
+          "chunk_id": "handbook:sales/training/sales-enablement-sessions/_index#c0020",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/workspace",
+          "chunk_id": "handbook:company/culture/all-remote/workspace#c0000",
+          "score": 0.1429
+        }
+      ],
+      "refused": null,
+      "latency_ms": 376.0,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "sales-fact-002",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "sales",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:sales/field-communications/field-update-tickers",
+          "chunk_id": "handbook:sales/field-communications/field-update-tickers#c0002",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-update-tickers",
+          "chunk_id": "handbook:sales/field-communications/field-update-tickers#c0000",
+          "score": 0.5333
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-update-tickers",
+          "chunk_id": "handbook:sales/field-communications/field-update-tickers#c0005",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-update-tickers",
+          "chunk_id": "handbook:sales/field-communications/field-update-tickers#c0001",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-update-tickers",
+          "chunk_id": "handbook:sales/field-communications/field-update-tickers#c0003",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-flash-newsletter/_index",
+          "chunk_id": "handbook:sales/field-communications/field-flash-newsletter/_index#c0003",
+          "score": 0.2323
+        },
+        {
+          "doc_id": "handbook:sales/training/sales-enablement-sessions/_index",
+          "chunk_id": "handbook:sales/training/sales-enablement-sessions/_index#c0016",
+          "score": 0.2262
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-flash-newsletter/_index",
+          "chunk_id": "handbook:sales/field-communications/field-flash-newsletter/_index#c0006",
+          "score": 0.2111
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-update-tickers",
+          "chunk_id": "handbook:sales/field-communications/field-update-tickers#c0004",
+          "score": 0.1833
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/_index",
+          "chunk_id": "handbook:sales/field-operations/_index#c0003",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 376.6,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-fact-001",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "ndcg@10": 0.5,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:finance/readmes/jessica-ross",
+          "chunk_id": "handbook:finance/readmes/jessica-ross#c0006",
+          "score": 0.75
+        },
+        {
+          "doc_id": "handbook:finance/readmes/jessica-ross",
+          "chunk_id": "handbook:finance/readmes/jessica-ross#c0003",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:finance/readmes/jessica-ross",
+          "chunk_id": "handbook:finance/readmes/jessica-ross#c0000",
+          "score": 0.4583
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0280",
+          "score": 0.3571
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0361",
+          "score": 0.2917
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0193",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0012",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0360",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0012",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:finance/readmes/jessica-ross",
+          "chunk_id": "handbook:finance/readmes/jessica-ross#c0001",
+          "score": 0.1429
+        }
+      ],
+      "refused": null,
+      "latency_ms": 382.6,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-fact-002",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights#c0015",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights#c0014",
+          "score": 0.6667
+        },
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights#c0007",
+          "score": 0.3611
+        },
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights#c0011",
+          "score": 0.2833
+        },
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights#c0012",
+          "score": 0.2778
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0007",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:finance/accounts-payable/_index",
+          "chunk_id": "handbook:finance/accounts-payable/_index#c0003",
+          "score": 0.1979
+        },
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/adaptive-insights#c0013",
+          "score": 0.1705
+        },
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/headcount-metrics-and-processes",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/headcount-metrics-and-processes#c0003",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:finance/financial-planning-and-analysis/headcount-metrics-and-processes",
+          "chunk_id": "handbook:finance/financial-planning-and-analysis/headcount-metrics-and-processes#c0006",
+          "score": 0.1429
+        }
+      ],
+      "refused": null,
+      "latency_ms": 381.0,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-fact-004",
+      "category": "single_fact",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:finance/accounting/finance-ops/billing-ops/_index",
+          "chunk_id": "handbook:finance/accounting/finance-ops/billing-ops/_index#c0000",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0361",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0184",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:finance/accounting/finance-ops/billing-ops/_index",
+          "chunk_id": "handbook:finance/accounting/finance-ops/billing-ops/_index#c0009",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:company/quote-to-cash",
+          "chunk_id": "handbook:company/quote-to-cash#c0007",
+          "score": 0.2857
+        },
+        {
+          "doc_id": "handbook:company/quote-to-cash",
+          "chunk_id": "handbook:company/quote-to-cash#c0010",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0265",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0240",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:company/working-groups/ecommerce",
+          "chunk_id": "handbook:company/working-groups/ecommerce#c0006",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0055",
+          "score": 0.1429
+        }
+      ],
+      "refused": null,
+      "latency_ms": 382.5,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "gen-001",
+      "category": "general_page",
+      "split": "dev",
+      "asked_as": "engineering",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags",
+          "chunk_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags#c0004",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags",
+          "chunk_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags#c0001",
+          "score": 0.5333
+        },
+        {
+          "doc_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags",
+          "chunk_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags#c0002",
+          "score": 0.5333
+        },
+        {
+          "doc_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags",
+          "chunk_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags#c0003",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags",
+          "chunk_id": "handbook:company/infrastructure-standards/realms/sandbox/labels-tags#c0000",
+          "score": 0.2222
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/gitlab-dedicated/dedicated-migrations",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/gitlab-dedicated/dedicated-migrations#c0011",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/gitlab_agent_deployments/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/gitlab_agent_deployments/_index#c0007",
+          "score": 0.1477
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/artifact_registry/agreements/infrastructure",
+          "chunk_id": "handbook:engineering/architecture/design-documents/artifact_registry/agreements/infrastructure#c0001",
+          "score": 0.1429
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/capacity-planning",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/capacity-planning#c0011",
+          "score": 0.1429
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/developer-experience/application-lifecycle/workflow",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/developer-experience/application-lifecycle/workflow#c0012",
+          "score": 0.1268
+        }
+      ],
+      "refused": null,
+      "latency_ms": 378.4,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "gen-006",
+      "category": "general_page",
+      "split": "dev",
+      "asked_as": "sales",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0003",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0002",
+          "score": 0.6667
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0000",
+          "score": 0.3667
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0004",
+          "score": 0.35
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0006",
+          "score": 0.3429
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0012",
+          "score": 0.3125
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0011",
+          "score": 0.2917
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0001",
+          "score": 0.254
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0007",
+          "score": 0.2361
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0009",
+          "score": 0.1623
+        }
+      ],
+      "refused": null,
+      "latency_ms": 380.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "gen-007",
+      "category": "general_page",
+      "split": "dev",
+      "asked_as": "hr",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.5,
+        "ndcg@10": 0.6309297535714575,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/working-groups/maintainership",
+          "chunk_id": "handbook:company/working-groups/maintainership#c0005",
+          "score": 0.5286
+        },
+        {
+          "doc_id": "handbook:company/working-groups/maintainership",
+          "chunk_id": "handbook:company/working-groups/maintainership#c0004",
+          "score": 0.527
+        },
+        {
+          "doc_id": "handbook:company/working-groups/dogfood-plan",
+          "chunk_id": "handbook:company/working-groups/dogfood-plan#c0002",
+          "score": 0.4333
+        },
+        {
+          "doc_id": "handbook:company/working-groups/hpt-product-division",
+          "chunk_id": "handbook:company/working-groups/hpt-product-division#c0003",
+          "score": 0.3566
+        },
+        {
+          "doc_id": "handbook:company/working-groups/merge-request-report-widgets",
+          "chunk_id": "handbook:company/working-groups/merge-request-report-widgets#c0005",
+          "score": 0.2935
+        },
+        {
+          "doc_id": "handbook:company/working-groups/self-managed-scalability",
+          "chunk_id": "handbook:company/working-groups/self-managed-scalability#c0003",
+          "score": 0.2667
+        },
+        {
+          "doc_id": "handbook:company/working-groups/ecommerce",
+          "chunk_id": "handbook:company/working-groups/ecommerce#c0005",
+          "score": 0.2576
+        },
+        {
+          "doc_id": "handbook:people-group/_index",
+          "chunk_id": "handbook:people-group/_index#c0011",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/tmrg-global-voices",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/tmrg-global-voices#c0001",
+          "score": 0.2435
+        },
+        {
+          "doc_id": "handbook:company/working-groups/transient-bugs",
+          "chunk_id": "handbook:company/working-groups/transient-bugs#c0002",
+          "score": 0.2292
+        }
+      ],
+      "refused": null,
+      "latency_ms": 380.5,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-sec-004",
+      "category": "sec_lookup",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0328",
+          "score": 0.7
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0334",
+          "score": 0.6667
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0064",
+          "score": 0.45
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0337",
+          "score": 0.4167
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0031",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0267",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0325",
+          "score": 0.1678
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0330",
+          "score": 0.1678
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0108",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0229",
+          "score": 0.1646
+        }
+      ],
+      "refused": null,
+      "latency_ms": 382.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-sec-006",
+      "category": "sec_lookup",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 0.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.125,
+        "ndcg@10": 0.31546487678572877,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0302",
+          "score": 0.5204
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0301",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0061",
+          "score": 0.3768
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0273",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0116",
+          "score": 0.2696
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0305",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0036",
+          "score": 0.2286
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0255",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0053",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0015",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 383.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-sec-011",
+      "category": "sec_lookup",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0059",
+          "score": 1.0
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0108",
+          "score": 0.5333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0322",
+          "score": 0.3646
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0093",
+          "score": 0.3088
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0062",
+          "score": 0.2667
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0321",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0104",
+          "score": 0.2292
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0106",
+          "score": 0.2193
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0041",
+          "score": 0.1883
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0042",
+          "score": 0.1875
+        }
+      ],
+      "refused": null,
+      "latency_ms": 385.1,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "mh-002",
+      "category": "multi_hop",
+      "split": "dev",
+      "asked_as": "hr",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 0.5,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:people-group/time-off-and-absence/time-off-types",
+          "chunk_id": "handbook:people-group/time-off-and-absence/time-off-types#c0001",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "handbook:people-group/time-off-and-absence/time-off-types",
+          "chunk_id": "handbook:people-group/time-off-and-absence/time-off-types#c0002",
+          "score": 0.5204
+        },
+        {
+          "doc_id": "handbook:total-rewards/benefits/general-and-entity-benefits/_index",
+          "chunk_id": "handbook:total-rewards/benefits/general-and-entity-benefits/_index#c0010",
+          "score": 0.3889
+        },
+        {
+          "doc_id": "handbook:people-group/time-off-and-absence/time-off-types",
+          "chunk_id": "handbook:people-group/time-off-and-absence/time-off-types#c0023",
+          "score": 0.3111
+        },
+        {
+          "doc_id": "handbook:total-rewards/benefits/general-and-entity-benefits/pty-benefits-australia",
+          "chunk_id": "handbook:total-rewards/benefits/general-and-entity-benefits/pty-benefits-australia#c0009",
+          "score": 0.2786
+        },
+        {
+          "doc_id": "handbook:hiring/interviewing/_index",
+          "chunk_id": "handbook:hiring/interviewing/_index#c0002",
+          "score": 0.2756
+        },
+        {
+          "doc_id": "handbook:people-group/time-off-and-absence/time-off-types",
+          "chunk_id": "handbook:people-group/time-off-and-absence/time-off-types#c0003",
+          "score": 0.2476
+        },
+        {
+          "doc_id": "handbook:people-group/incident-response",
+          "chunk_id": "handbook:people-group/incident-response#c0004",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:total-rewards/benefits/general-and-entity-benefits/pty-benefits-australia",
+          "chunk_id": "handbook:total-rewards/benefits/general-and-entity-benefits/pty-benefits-australia#c0008",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:people-group/time-off-and-absence/time-away-philosophy",
+          "chunk_id": "handbook:people-group/time-off-and-absence/time-away-philosophy#c0009",
+          "score": 0.15
+        }
+      ],
+      "refused": null,
+      "latency_ms": 380.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-sec-017",
+      "category": "sec_lookup",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0056",
+          "score": 1.0
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0320",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0058",
+          "score": 0.4167
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0103",
+          "score": 0.3604
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0234",
+          "score": 0.3111
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0314",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0294",
+          "score": 0.1714
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0100",
+          "score": 0.1679
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0303",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0063",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 380.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "mh-102",
+      "category": "multi_hop",
+      "split": "dev",
+      "asked_as": "legal",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0002",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0003",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0009",
+          "score": 0.4583
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0005",
+          "score": 0.45
+        },
+        {
+          "doc_id": "handbook:legal/policies/gifts-contributions",
+          "chunk_id": "handbook:legal/policies/gifts-contributions#c0007",
+          "score": 0.3095
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0010",
+          "score": 0.2833
+        },
+        {
+          "doc_id": "handbook:legal/process-for-ux-research-prize-draws/index",
+          "chunk_id": "handbook:legal/process-for-ux-research-prize-draws/index#c0004",
+          "score": 0.2429
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0007",
+          "score": 0.2121
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0006",
+          "score": 0.1944
+        },
+        {
+          "doc_id": "handbook:legal/process-for-a-conference-sweepstakes",
+          "chunk_id": "handbook:legal/process-for-a-conference-sweepstakes#c0001",
+          "score": 0.1917
+        }
+      ],
+      "refused": null,
+      "latency_ms": 381.3,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "mh-103",
+      "category": "multi_hop",
+      "split": "dev",
+      "asked_as": "sales",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:sales/field-operations/channel-operations/sales-faq",
+          "chunk_id": "handbook:sales/field-operations/channel-operations/sales-faq#c0002",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/channel-operations/sales-faq",
+          "chunk_id": "handbook:sales/field-operations/channel-operations/sales-faq#c0001",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/field-flash-newsletter/_index",
+          "chunk_id": "handbook:sales/field-communications/field-flash-newsletter/_index#c0007",
+          "score": 0.369
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/release-schedule",
+          "chunk_id": "handbook:sales/field-operations/release-schedule#c0004",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/channel-operations/sales-faq",
+          "chunk_id": "handbook:sales/field-operations/channel-operations/sales-faq#c0010",
+          "score": 0.2667
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/channel-operations/sales-faq",
+          "chunk_id": "handbook:sales/field-operations/channel-operations/sales-faq#c0003",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:sales/commercial/high_velocity_sales_first_orders",
+          "chunk_id": "handbook:sales/commercial/high_velocity_sales_first_orders#c0021",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:sales/manager-operating-rhythm/enterprise-sales",
+          "chunk_id": "handbook:sales/manager-operating-rhythm/enterprise-sales#c0009",
+          "score": 0.1845
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/channel-operations/sales-faq",
+          "chunk_id": "handbook:sales/field-operations/channel-operations/sales-faq#c0014",
+          "score": 0.1845
+        },
+        {
+          "doc_id": "handbook:sales/commercial/high_velocity_sales_first_orders",
+          "chunk_id": "handbook:sales/commercial/high_velocity_sales_first_orders#c0017",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.5,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-xlsx-004",
+      "category": "spreadsheet_lookup",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0010",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0009",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0008",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0155",
+          "score": 0.3667
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0007",
+          "score": 0.325
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0005",
+          "score": 0.2679
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0002",
+          "score": 0.25
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0004",
+          "score": 0.2429
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0006",
+          "score": 0.2111
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0003",
+          "score": 0.1944
+        }
+      ],
+      "refused": null,
+      "latency_ms": 379.8,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-xlsx-005",
+      "category": "spreadsheet_lookup",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "synthetic:vendor_spend_fy2027",
+          "chunk_id": "synthetic:vendor_spend_fy2027#c0001",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0074",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0215",
+          "score": 0.4
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0041",
+          "score": 0.3646
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0023",
+          "score": 0.2935
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0098",
+          "score": 0.2857
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0087",
+          "score": 0.2679
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0085",
+          "score": 0.2198
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0097",
+          "score": 0.2167
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0110",
+          "score": 0.1917
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.5,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-xlsx-006",
+      "category": "spreadsheet_lookup",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.25,
+        "ndcg@10": 0.43067655807339306,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "synthetic:budget_fy2027",
+          "chunk_id": "synthetic:budget_fy2027#c0003",
+          "score": 0.6429
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0147",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0103",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "synthetic:vendor_spend_fy2027",
+          "chunk_id": "synthetic:vendor_spend_fy2027#c0001",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0221",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0054",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0058",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0222",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0104",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0008",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.1,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-cross-001",
+      "category": "cross_source_finance",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 0.5,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "synthetic:budget_fy2027",
+          "chunk_id": "synthetic:budget_fy2027#c0003",
+          "score": 0.6429
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0166",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0001",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0090",
+          "score": 0.4444
+        },
+        {
+          "doc_id": "synthetic:headcount_fy2027",
+          "chunk_id": "synthetic:headcount_fy2027#c0009",
+          "score": 0.3704
+        },
+        {
+          "doc_id": "synthetic:budget_fy2027",
+          "chunk_id": "synthetic:budget_fy2027#c0001",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:company/working-groups/ecommerce",
+          "chunk_id": "handbook:company/working-groups/ecommerce#c0003",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0221",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0002",
+          "score": 0.1829
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0078",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 378.5,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "oos-002",
+      "category": "out_of_scope",
+      "split": "dev",
+      "asked_as": "hr",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/culture/all-remote/workspace",
+          "chunk_id": "handbook:company/culture/all-remote/workspace#c0006",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:company/working-groups/dogfood-plan",
+          "chunk_id": "handbook:company/working-groups/dogfood-plan#c0003",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:company/working-groups/customer-use-case-adoption",
+          "chunk_id": "handbook:company/working-groups/customer-use-case-adoption#c0002",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:hiring/talent-acquisition-framework/coordinator",
+          "chunk_id": "handbook:hiring/talent-acquisition-framework/coordinator#c0088",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:people-policies/india-ltd/india-sexual-harassment-policy",
+          "chunk_id": "handbook:people-policies/india-ltd/india-sexual-harassment-policy#c0009",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:total-rewards/benefits/general-and-entity-benefits/_index",
+          "chunk_id": "handbook:total-rewards/benefits/general-and-entity-benefits/_index#c0013",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:hiring/talent-acquisition-framework/coordinator",
+          "chunk_id": "handbook:hiring/talent-acquisition-framework/coordinator#c0069",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:people-group/employment-branding/_index",
+          "chunk_id": "handbook:people-group/employment-branding/_index#c0018",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/operating-principles",
+          "chunk_id": "handbook:company/operating-principles#c0004",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/remote-work-starter-guide",
+          "chunk_id": "handbook:company/culture/all-remote/remote-work-starter-guide#c0006",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 375.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "oos-003",
+      "category": "out_of_scope",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0258",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0270",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0170",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0206",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0182",
+          "score": 0.2714
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0316",
+          "score": 0.2679
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0050",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0181",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0049",
+          "score": 0.2024
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0180",
+          "score": 0.2
+        }
+      ],
+      "refused": null,
+      "latency_ms": 378.4,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "oos-005",
+      "category": "out_of_scope",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0301",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0031",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0267",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0320",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0221",
+          "score": 0.2935
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0034",
+          "score": 0.25
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0295",
+          "score": 0.2476
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0164",
+          "score": 0.2
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0053",
+          "score": 0.1894
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0224",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.5,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "inj-direct-001",
+      "category": "direct_injection",
+      "split": "dev",
+      "asked_as": "engineering",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0002",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0001",
+          "score": 0.54
+        },
+        {
+          "doc_id": "handbook:company/working-groups/ecommerce",
+          "chunk_id": "handbook:company/working-groups/ecommerce#c0002",
+          "score": 0.3667
+        },
+        {
+          "doc_id": "handbook:engineering/workflow/development-processes/infra-dev-escalation/_index",
+          "chunk_id": "handbook:engineering/workflow/development-processes/infra-dev-escalation/_index#c0001",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:company/quote-to-cash",
+          "chunk_id": "handbook:company/quote-to-cash#c0001",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index#c0002",
+          "score": 0.2262
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0007",
+          "score": 0.2238
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/team-history",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/team-history#c0000",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/quote-to-cash",
+          "chunk_id": "handbook:company/quote-to-cash#c0019",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/guide/design",
+          "chunk_id": "handbook:company/culture/all-remote/guide/design#c0008",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.3,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "inj-direct-004",
+      "category": "direct_injection",
+      "split": "dev",
+      "asked_as": "sales",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:sales/field-communications/gitlab-highspot/index",
+          "chunk_id": "handbook:sales/field-communications/gitlab-highspot/index#c0016",
+          "score": 0.6667
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/gitlab-highspot/index",
+          "chunk_id": "handbook:sales/field-communications/gitlab-highspot/index#c0006",
+          "score": 0.6667
+        },
+        {
+          "doc_id": "handbook:company/working-groups/merge-request-report-widgets",
+          "chunk_id": "handbook:company/working-groups/merge-request-report-widgets#c0003",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/gitlab-highspot/index",
+          "chunk_id": "handbook:sales/field-communications/gitlab-highspot/index#c0015",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0007",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:sales/field-communications/gitlab-highspot/index",
+          "chunk_id": "handbook:sales/field-communications/gitlab-highspot/index#c0017",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:sales/field-operations/sales-systems/salesforce-config",
+          "chunk_id": "handbook:sales/field-operations/sales-systems/salesforce-config#c0002",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:sales/commercial/high_velocity_sales_first_orders",
+          "chunk_id": "handbook:sales/commercial/high_velocity_sales_first_orders#c0009",
+          "score": 0.1429
+        },
+        {
+          "doc_id": "handbook:company/working-groups/api-vision",
+          "chunk_id": "handbook:company/working-groups/api-vision#c0001",
+          "score": 0.1429
+        },
+        {
+          "doc_id": "handbook:sales/training/sales-enablement-sessions/_index",
+          "chunk_id": "handbook:sales/training/sales-enablement-sessions/_index#c0005",
+          "score": 0.125
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.3,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "fin-cross-004",
+      "category": "cross_source_finance",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "ndcg@10": 0.5,
+        "evidence_recall@10": 0.5,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0096",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0222",
+          "score": 0.6667
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0078",
+          "score": 0.5
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0094",
+          "score": 0.45
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0213",
+          "score": 0.3929
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0084",
+          "score": 0.3429
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0036",
+          "score": 0.1635
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0097",
+          "score": 0.1528
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0085",
+          "score": 0.1513
+        },
+        {
+          "doc_id": "sec:10-K:2026-01-31",
+          "chunk_id": "sec:10-K:2026-01-31#c0295",
+          "score": 0.1497
+        }
+      ],
+      "refused": null,
+      "latency_ms": 382.0,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "clevel-002",
+      "category": "c_level",
+      "split": "dev",
+      "asked_as": "c_level",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 0.5,
+        "ndcg@10": 0.6309297535714575,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:engineering/architecture/practice/scalability/index",
+          "chunk_id": "handbook:engineering/architecture/practice/scalability/index#c0001",
+          "score": 0.5667
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/practice/scalability/index",
+          "chunk_id": "handbook:engineering/architecture/practice/scalability/index#c0000",
+          "score": 0.5286
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/composition_analysis_analyzers_metrics/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/composition_analysis_analyzers_metrics/_index#c0008",
+          "score": 0.45
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/custom_models/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/custom_models/_index#c0008",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/practice/scalability/index",
+          "chunk_id": "handbook:engineering/architecture/practice/scalability/index#c0003",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/autodevops_v2/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/autodevops_v2/_index#c0009",
+          "score": 0.2722
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0153",
+          "score": 0.2019
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/autodevops_v2/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/autodevops_v2/_index#c0003",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:marketing/product-and-technical-marketing/product-and-solution-marketing/usecase-gtm/incident-management",
+          "chunk_id": "handbook:marketing/product-and-technical-marketing/product-and-solution-marketing/usecase-gtm/incident-management#c0012",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/cloud-native-development/phases/1-modularization",
+          "chunk_id": "handbook:engineering/architecture/design-documents/cloud-native-development/phases/1-modularization#c0005",
+          "score": 0.1773
+        }
+      ],
+      "refused": null,
+      "latency_ms": 378.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "clevel-003",
+      "category": "c_level",
+      "split": "dev",
+      "asked_as": "c_level",
+      "expected_behavior": "answer",
+      "metrics": {
+        "retrieval_leak": false,
+        "hit@5": 1.0,
+        "hit@10": 1.0,
+        "mrr@10": 1.0,
+        "ndcg@10": 1.0,
+        "evidence_recall@10": 1.0,
+        "doc_hit@10": 1.0
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0010",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0011",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0012",
+          "score": 0.5833
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0024",
+          "score": 0.4
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0023",
+          "score": 0.2778
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0005",
+          "score": 0.2292
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0015",
+          "score": 0.1726
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0017",
+          "score": 0.1685
+        },
+        {
+          "doc_id": "handbook:marketing/marketing-operations/outreach/index",
+          "chunk_id": "handbook:marketing/marketing-operations/outreach/index#c0004",
+          "score": 0.1603
+        },
+        {
+          "doc_id": "handbook:finance/procurement/field-marketing-events",
+          "chunk_id": "handbook:finance/procurement/field-marketing-events#c0001",
+          "score": 0.1429
+        }
+      ],
+      "refused": null,
+      "latency_ms": 383.9,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "xrole-001",
+      "category": "cross_role",
+      "split": "dev",
+      "asked_as": "engineering",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/culture/all-remote/building-culture",
+          "chunk_id": "handbook:company/culture/all-remote/building-culture#c0015",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/guide/design",
+          "chunk_id": "handbook:company/culture/all-remote/guide/design#c0008",
+          "score": 0.4444
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/ai_evaluation_consolidation/_index",
+          "chunk_id": "handbook:engineering/architecture/design-documents/ai_evaluation_consolidation/_index#c0002",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:engineering/development/sec/oncall/joining-and-leaving-rotation",
+          "chunk_id": "handbook:engineering/development/sec/oncall/joining-and-leaving-rotation#c0008",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/capacity-planning",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/capacity-planning#c0006",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/remote-benefits",
+          "chunk_id": "handbook:company/culture/all-remote/remote-benefits#c0006",
+          "score": 0.2222
+        },
+        {
+          "doc_id": "handbook:company/working-groups/self-managed-scalability",
+          "chunk_id": "handbook:company/working-groups/self-managed-scalability#c0002",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/remote-benefits",
+          "chunk_id": "handbook:company/culture/all-remote/remote-benefits#c0010",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:engineering/development/sec/oncall/joining-and-leaving-rotation",
+          "chunk_id": "handbook:engineering/development/sec/oncall/joining-and-leaving-rotation#c0002",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:engineering/devops/create/code-review/_index",
+          "chunk_id": "handbook:engineering/devops/create/code-review/_index#c0010",
+          "score": 0.1497
+        }
+      ],
+      "refused": null,
+      "latency_ms": 379.3,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "xrole-006",
+      "category": "cross_role",
+      "split": "dev",
+      "asked_as": "sales",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/working-groups/ecommerce",
+          "chunk_id": "handbook:company/working-groups/ecommerce#c0003",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index#c0006",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0002",
+          "score": 0.4333
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0001",
+          "score": 0.4167
+        },
+        {
+          "doc_id": "handbook:sales/command-of-the-message/metrics",
+          "chunk_id": "handbook:sales/command-of-the-message/metrics#c0008",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:sales/manager-operating-rhythm/channel-sales",
+          "chunk_id": "handbook:sales/manager-operating-rhythm/channel-sales#c0006",
+          "score": 0.3214
+        },
+        {
+          "doc_id": "handbook:company/working-groups/customer-use-case-adoption",
+          "chunk_id": "handbook:company/working-groups/customer-use-case-adoption#c0000",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:sales/training/sales-enablement-sessions/_index",
+          "chunk_id": "handbook:sales/training/sales-enablement-sessions/_index#c0018",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:sales/manager-operating-rhythm/channel-sales",
+          "chunk_id": "handbook:sales/manager-operating-rhythm/channel-sales#c0000",
+          "score": 0.175
+        },
+        {
+          "doc_id": "handbook:company/working-groups/dogfood-plan",
+          "chunk_id": "handbook:company/working-groups/dogfood-plan#c0001",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 1469.1,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "xrole-007",
+      "category": "cross_role",
+      "split": "dev",
+      "asked_as": "engineering",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0007",
+          "score": 0.5278
+        },
+        {
+          "doc_id": "handbook:engineering/development/sec/security-factory/code-scanning/runbooks/analyzer-deprecation-and-removal-instructions",
+          "chunk_id": "handbook:engineering/development/sec/security-factory/code-scanning/runbooks/analyzer-deprecation-and-removal-instructions#c0000",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/incident-management/roles/communications-lead",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/incident-management/roles/communications-lead#c0004",
+          "score": 0.4444
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/artifact_registry/agreements/infrastructure",
+          "chunk_id": "handbook:engineering/architecture/design-documents/artifact_registry/agreements/infrastructure#c0012",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/incident-management/roles/communications-lead",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/incident-management/roles/communications-lead#c0003",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:engineering/development/sec/security-factory/code-scanning/runbooks/analyzer-deprecation-and-removal-instructions",
+          "chunk_id": "handbook:engineering/development/sec/security-factory/code-scanning/runbooks/analyzer-deprecation-and-removal-instructions#c0003",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:engineering/architecture/design-documents/artifact_registry/agreements/infrastructure",
+          "chunk_id": "handbook:engineering/architecture/design-documents/artifact_registry/agreements/infrastructure#c0013",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0005",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/incident-management/roles/communications-lead",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/incident-management/roles/communications-lead#c0007",
+          "score": 0.1685
+        },
+        {
+          "doc_id": "handbook:engineering/infrastructure-platforms/tenant-scale/organizations/_index",
+          "chunk_id": "handbook:engineering/infrastructure-platforms/tenant-scale/organizations/_index#c0013",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 379.7,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "xrole-008",
+      "category": "cross_role",
+      "split": "dev",
+      "asked_as": "finance",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:finance/growth-and-development/cfo-shadow-program",
+          "chunk_id": "handbook:finance/growth-and-development/cfo-shadow-program#c0011",
+          "score": 0.8333
+        },
+        {
+          "doc_id": "handbook:finance/committee-composition",
+          "chunk_id": "handbook:finance/committee-composition#c0006",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:finance/growth-and-development/cfo-shadow-program",
+          "chunk_id": "handbook:finance/growth-and-development/cfo-shadow-program#c0001",
+          "score": 0.3409
+        },
+        {
+          "doc_id": "handbook:finance/procurement/contingent-worker-policy",
+          "chunk_id": "handbook:finance/procurement/contingent-worker-policy#c0009",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:company/working-groups/secure-govern-database-decomposition/_index",
+          "chunk_id": "handbook:company/working-groups/secure-govern-database-decomposition/_index#c0000",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:company/working-groups/secure-govern-database-decomposition/_index",
+          "chunk_id": "handbook:company/working-groups/secure-govern-database-decomposition/_index#c0005",
+          "score": 0.2476
+        },
+        {
+          "doc_id": "handbook:finance/growth-and-development/_index",
+          "chunk_id": "handbook:finance/growth-and-development/_index#c0001",
+          "score": 0.225
+        },
+        {
+          "doc_id": "sec:10-Q:2026-07-31",
+          "chunk_id": "sec:10-Q:2026-07-31#c0225",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:finance/growth-and-development/cfo-shadow-program",
+          "chunk_id": "handbook:finance/growth-and-development/cfo-shadow-program#c0007",
+          "score": 0.1667
+        },
+        {
+          "doc_id": "handbook:company/culture/all-remote/remote-benefits",
+          "chunk_id": "handbook:company/culture/all-remote/remote-benefits#c0000",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 379.4,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "xrole-010",
+      "category": "cross_role",
+      "split": "dev",
+      "asked_as": "legal",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:legal/privacy/transparency-reports",
+          "chunk_id": "handbook:legal/privacy/transparency-reports#c0008",
+          "score": 0.5227
+        },
+        {
+          "doc_id": "handbook:legal/subscription-agreement/index",
+          "chunk_id": "handbook:legal/subscription-agreement/index#c0038",
+          "score": 0.5
+        },
+        {
+          "doc_id": "handbook:legal/privacy/transparency-reports",
+          "chunk_id": "handbook:legal/privacy/transparency-reports#c0000",
+          "score": 0.3656
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0004",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:legal/privacy/transparency-reports",
+          "chunk_id": "handbook:legal/privacy/transparency-reports#c0002",
+          "score": 0.2794
+        },
+        {
+          "doc_id": "handbook:company/working-groups/merge-request-report-widgets",
+          "chunk_id": "handbook:company/working-groups/merge-request-report-widgets#c0001",
+          "score": 0.25
+        },
+        {
+          "doc_id": "handbook:legal/legacy/legacy-subscription-agreement-v4",
+          "chunk_id": "handbook:legal/legacy/legacy-subscription-agreement-v4#c0034",
+          "score": 0.2345
+        },
+        {
+          "doc_id": "handbook:legal/legacy/data-processing-addendum-and-standard-contractual-clauses",
+          "chunk_id": "handbook:legal/legacy/data-processing-addendum-and-standard-contractual-clauses#c0013",
+          "score": 0.2054
+        },
+        {
+          "doc_id": "handbook:company/working-groups/database-scalability/time-decay",
+          "chunk_id": "handbook:company/working-groups/database-scalability/time-decay#c0011",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:legal/privacy/employee-privacy-policy",
+          "chunk_id": "handbook:legal/privacy/employee-privacy-policy#c0022",
+          "score": 0.1667
+        }
+      ],
+      "refused": null,
+      "latency_ms": 376.4,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    },
+    {
+      "id": "xrole-011",
+      "category": "cross_role",
+      "split": "dev",
+      "asked_as": "marketing",
+      "expected_behavior": "refuse",
+      "metrics": {
+        "retrieval_leak": false
+      },
+      "retrieved": [
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0001",
+          "score": 1.0
+        },
+        {
+          "doc_id": "handbook:company/working-groups/ecommerce",
+          "chunk_id": "handbook:company/working-groups/ecommerce#c0003",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:marketing/growth-marketing/corporate-events",
+          "chunk_id": "handbook:marketing/growth-marketing/corporate-events#c0024",
+          "score": 0.3333
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/templates#c0002",
+          "score": 0.3214
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index#c0006",
+          "score": 0.2803
+        },
+        {
+          "doc_id": "handbook:marketing/developer-relations/engineering/community-contributors-workflows",
+          "chunk_id": "handbook:marketing/developer-relations/engineering/community-contributors-workflows#c0025",
+          "score": 0.225
+        },
+        {
+          "doc_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index",
+          "chunk_id": "handbook:company/culture/inclusion/tmrg-tmag/leaders/_index#c0001",
+          "score": 0.2083
+        },
+        {
+          "doc_id": "handbook:marketing/growth-marketing/corporate-events",
+          "chunk_id": "handbook:marketing/growth-marketing/corporate-events#c0009",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:company/operating-principles",
+          "chunk_id": "handbook:company/operating-principles#c0003",
+          "score": 0.2
+        },
+        {
+          "doc_id": "handbook:marketing/growth-marketing/partner-and-industry-marketing/hyperscalers",
+          "chunk_id": "handbook:marketing/growth-marketing/partner-and-industry-marketing/hyperscalers#c0009",
+          "score": 0.1799
+        }
+      ],
+      "refused": null,
+      "latency_ms": 377.2,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "cost_usd": null,
+      "error": null
+    }
+  ],
+  "aggregates": {
+    "hit@5": 0.9655172413793104,
+    "hit@10": 1.0,
+    "mrr@10": 0.8232758620689655,
+    "ndcg@10": 0.8668596791577068,
+    "evidence_recall@10": 0.9482758620689655,
+    "doc_hit@10": 1.0,
+    "leak_rate": 0.0,
+    "n_items": 40,
+    "n_errors": 0,
+    "n_retrieval_items": 29,
+    "latency_p50_ms": 379.55,
+    "latency_p95_ms": 414.12
+  }
+}

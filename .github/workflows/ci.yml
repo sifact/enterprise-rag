@@ -18,7 +18,7 @@ jobs:
       - name: Unit tests
         run: uv run pytest -q
       - name: Leak gate (committed test-split runs must have leak_rate 0)
-        run: uv run enterprise-rag gate eval/runs/*-rag-test-safety.json eval/runs/*-test-retrieval.json
+        run: uv run enterprise-rag gate eval/runs/*-test*.json
 
   web:
     runs-on: ubuntu-latest

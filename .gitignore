@@ -11,3 +11,5 @@ __pycache__/
 # Web app
 web/node_modules/
 web/dist/
+.vercel
+.env*
