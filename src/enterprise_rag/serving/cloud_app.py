@@ -52,5 +52,7 @@ def make_app() -> FastAPI:
     results = json.loads((DEPLOY_DIR / "results.json").read_text())
     roles = [r["name"] for r in meta["roles"]]
     pipeline = build_cloud_rag(cloud_client(), rag.cloud_collection + SAFETY_SUFFIX)
+    # web/dist is built at deploy time (vercel.json buildCommand); Vercel serves it from the CDN.
     return create_app(pipeline, rag, roles, meta, runs_dir=None, results=results,
+                      static_dir=PROJECT_ROOT / "web" / "dist",
                       secret=os.environ["SESSION_SECRET"])
