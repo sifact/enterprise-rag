@@ -21,6 +21,11 @@ CHECK_WORKERS = 6
 _SENTENCE = re.compile(r"(?<=[.!?])\s+|\n+")
 Kind = Literal["question", "passage"]
 
+_ADDRESSES_ASSISTANT = re.compile(
+    r"\b(assistants?|chatbots?|language models?|llms?"
+    r"|you (must|should|will|shall|are to)|your (previous|instructions?|reply|response|answer|task)"
+    r"|reply with|respond with|begin your|start your)\b", re.IGNORECASE)
+
 # (reason, pattern, applies to passages too?)
 _RULES: tuple[tuple[str, re.Pattern, bool], ...] = (
     ("instruction_override", re.compile(
@@ -60,7 +65,10 @@ class InjectionGuard:
     def check(self, text: str, kind: Kind = "question") -> GuardResult:
         rules = heuristic_flags(text, kind)
         score, note = 0.0, ""
-        if self.scorer is not None:
+        # Every question is scored. A passage is scored only if it addresses the assistant:
+        # the classifier is rate-limited (30 requests a minute on the free tier), and ordinary
+        # handbook text has no way to instruct a model.
+        if self.scorer is not None and (kind == "question" or _ADDRESSES_ASSISTANT.search(text)):
             try:
                 score = float(self.scorer(text))
             except (LLMError, ValueError) as exc:
